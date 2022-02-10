@@ -1,8 +1,6 @@
-import 'package:collection/collection.dart';
-
 import 'puzzle_exception.dart';
 
-class SlidePuzzleGenerator {
+class SixteenPuzzleGenerator {
   String puzzleToSeed(List<int> val) => String.fromCharCodes(val.map((e) => 64 + e));
 
   /// Load puzzle from string seed
@@ -13,32 +11,26 @@ class SlidePuzzleGenerator {
   List<int> puzzleFromSeed(String seed) {
     final list = seed.codeUnits;
     if (list.any((e) => e > 80 || e < 65)) throw PuzzleException.invalidCharacters();
-    if (list.sum != 1160) throw PuzzleException.wrongSum();
+    if (list.fold<int>(0, (p, e) => p + e) != 1160) throw PuzzleException.wrongSum();
     return list.map((e) => e - 64).toList(growable: false);
   }
 
-  /// Check is 15-Puzzle is solvable, total sum of transpositions must be even for the puzzle to be solvable
-  /// Blank value is 16. Supports only puzzles where blank is the last element.
-  /// https://www.geeksforgeeks.org/check-instance-15-puzzle-solvable/
-  /// For puzzle with N = 4 (4 x 4) if N is even, puzzle is solvable if
-  /// a) the blank is on an even row counting from the bottom (second-last, fourth-last, etc.)
-  /// and number of inversions is odd, or
-  /// b) the blank is on an odd row counting from the bottom (last, third-last, fifth-last, etc.)
-  /// and number of inversions is even.
-  bool validate(List<int> list, [int N = 4]) {
-    assert(N * N == list.length);
-    final transpositions = _countSortTranspositions(List<int>.from(list));
+  /// Generate valid 4x4 puzzle
+  List<int> puzzleRandom() {
+    final puzzle = List<int>.generate(16, (i) => i)..shuffle();
+    while (!validate(puzzle)) puzzle.shuffle();
+    return puzzle;
+  }
 
-    if (N.isOdd) return transpositions.isEven;
-
-    if (transpositions.isOdd) return false;
-    final blankPosition = list.indexOf(N * N);
-
-    if (blankPosition & 1 == 0) {
-      return !(transpositions & 1 == 0);
-    } else {
-      return transpositions & 1 == 0;
-    }
+  /// Check is 16-Puzzle is solvable, total sum of transpositions must be even for the puzzle to be solvable Blank value is 16.
+  bool validate(List<int> list) {
+    assert(list.length == 16);
+    /* Puzzle is solvable when
+    a) if the blank is on an even row counting from the bottom  -> number of inversions must be odd.
+    b) if the blank is on an odd row counting from the bottom   -> number of inversions is even. */
+    final isBlankRowEven = (list.indexOf(16) ~/ 4).isEven;
+    final transpositions = _countSortTranspositions(List<int>.from(list, growable: false));
+    return isBlankRowEven ? transpositions.isOdd : transpositions.isEven;
   }
 
   int _countSortTranspositions(List<int> list) {

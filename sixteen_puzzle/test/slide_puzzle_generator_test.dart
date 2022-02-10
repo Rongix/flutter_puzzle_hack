@@ -1,20 +1,20 @@
-import 'package:flutter_test/flutter_test.dart';
 import 'package:sixteen_puzzle/src/puzzle_exception.dart';
 import 'package:sixteen_puzzle/src/slide_puzzle_generator.dart';
+import 'package:test/test.dart';
 
 import 'test_data.dart';
 
 void main() {
-  late final SlidePuzzleGenerator generator;
+  late final SixteenPuzzleGenerator generator;
 
-  setUp(() {
-    generator = SlidePuzzleGenerator();
+  setUpAll(() {
+    generator = SixteenPuzzleGenerator();
   });
 
   group('generator tests', () {
     group('seed', () {
       test('to seed', () {
-        final actual = generator.puzzleToSeed(TestData.unsolvable1);
+        final actual = generator.puzzleToSeed(TestData.unsolvablePuzzles.first);
         expect(actual, TestData.unsolvable1Seed);
       });
       test('from seed', () {
@@ -34,11 +34,8 @@ void main() {
     });
 
     test('validator', () {
-      expect(generator.validate(TestData.unsolvable1), false);
-      expect(generator.validate(TestData.unsolvable2), false);
-
-      expect(generator.validate(TestData.solvable1), true);
-      expect(generator.validate(TestData.solvable2), true);
+      for (final puzzle in TestData.unsolvablePuzzles) expect(generator.validate(puzzle), false);
+      for (final puzzle in TestData.solvablePuzzles) expect(generator.validate(puzzle), true);
     });
   });
 }
