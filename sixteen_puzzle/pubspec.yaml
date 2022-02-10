@@ -1,6 +1,7 @@
-name: slide_puzzle
-description: A new Flutter package project.
+name: sixteen_puzzle
+description: Sixteen puzzle generator
 version: 0.0.1
+publish_to: none
 
 environment:
   sdk: ">=2.16.0 <3.0.0"
@@ -15,5 +16,3 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^1.0.0
-
-flutter:

@@ -1,0 +1,17 @@
+include: lint_rules.yaml
+
+analyzer:
+  exclude:
+    - "**/l10n/**"
+    - "**/generated/**"
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+    - "**/*.config.dart"
+
+  strong-mode:
+    implicit-casts: false
+    implicit-dynamic: false
+
+  errors:
+    missing_return: warning
+    unnecessary_null_comparison: warning
