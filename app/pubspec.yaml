@@ -1,0 +1,29 @@
+name: app
+description: Flutter puzzle hack challange app
+publish_to: "none"
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.16.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  get_it: ^7.2.0
+  flutter_bloc: ^8.0.1
+  equatable: ^2.0.3
+  url_strategy: ^0.2.0
+  uri: ^1.0.0
+  collection: ^1.15.0
+  path_to_regexp: ^0.4.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  bloc_test: ^9.0.2
+  build_runner: ^2.1.7
+  mocktail: ^0.2.0
+
+flutter:
+  uses-material-design: false

@@ -1,4 +1,4 @@
-import 'package:sixteen_puzzle/src/slide_puzzle_generator.dart';
+import 'package:sixteen_puzzle/src/sixteen_puzzle_generator.dart';
 
 void main() {
   final generator = SixteenPuzzleGenerator();

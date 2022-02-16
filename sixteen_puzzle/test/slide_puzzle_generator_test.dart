@@ -1,5 +1,5 @@
 import 'package:sixteen_puzzle/src/puzzle_exception.dart';
-import 'package:sixteen_puzzle/src/slide_puzzle_generator.dart';
+import 'package:sixteen_puzzle/src/sixteen_puzzle_generator.dart';
 import 'package:test/test.dart';
 
 import 'test_data.dart';
