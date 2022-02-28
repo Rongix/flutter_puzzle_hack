@@ -34,7 +34,7 @@ It would be cool to compete with friends. The timer should start preferably at t
 When puzzle is finished there is a time result and number of swaps made 
 Query params:
 * (optional param) start - start time - time in local time  e.g.: "start=20:30"
-* (optional param) puzzle - is puzzle in hack mode e.g.: "puzzle=hack" "puzzle=nohack" (any other word does not change anything, unless it's not true)
+* (optional param) hack - is puzzle in hack mode e.g.: "hack=true" "hack=nohack" (any other word does not change anything, unless it's not true)
 
 /{seed}?start=20:30&puzzle=hack
 /{seed}?puzzle=hack
@@ -46,3 +46,4 @@ custom backend (Sounds like super fun - post MVP)
 
 ## Notes
 This is mainly a web app - parsing and updating address bar is important
+Trying to use Flutter's favorite packages whenever possible (Good practice)

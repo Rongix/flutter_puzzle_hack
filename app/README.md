@@ -1,16 +1,26 @@
-# app
-
-A new Flutter project.
-
 ## Getting Started
+Flutter puzzle hack (literally) challange
+Please read ./docs/idea.md to get started
 
-This project is a starting point for a Flutter application.
+## Styling
+Conform to lint style from lint_rules.yaml
+Code is formatted to 110 characters per line
 
-A few resources to get you started if this is your first Flutter project:
+For VScode change these settings:
+```json
+"dart.lineLength": 110,
+"[dart]": {
+    "editor.rulers": [
+        110
+    ],
+},
+```
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+## Architecture
+For state management Flutter Bloc package is used <3
+We do not use Flutter's Inherited widget nor Provider (That includes BlocProvider), instead logic and views are separated
+wherever possible. Dependency injection is used which included get_it (no generator used)
+Bloc state classes use vanilla dart classes with no code generation tangled in (No freezed)
+Code generation in the project is limited to the minimum (preferably 0 code generation)
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+*(To consider) Translation layer (project only supports english language version (there will be few strings in the game))
