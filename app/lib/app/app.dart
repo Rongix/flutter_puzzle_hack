@@ -40,7 +40,7 @@ class AppRouteInformationParser extends RouteInformationParser<NavigatorCubitSta
 
   @override
   RouteInformation? restoreRouteInformation(NavigatorCubitState configuration) => RouteInformation(
-        location: configuration.pathTemplate?.expand(configuration.pathParameters) ?? '/',
+        location: configuration.pathTemplate?.expand(configuration.pathParameters) ?? '/help',
       );
 }
 
@@ -73,7 +73,12 @@ class AppRouterDelegate extends RouterDelegate<NavigatorCubitState> {
   @override
   Widget build(BuildContext context) {
     return Navigator(
-      pages: const [MaterialPage<void>(key: ValueKey('Home'), child: HomeView())],
+      pages: [
+        const MaterialPage<void>(key: ValueKey('Home'), child: HomeView()),
+        if (navigator.state.pathTemplate == NavigatorCubit.aboutPath)
+          const MaterialPage<void>(
+              key: ValueKey('About'), child: Scaffold(body: Center(child: Text('About'))))
+      ],
       onPopPage: onPopPage,
     );
   }

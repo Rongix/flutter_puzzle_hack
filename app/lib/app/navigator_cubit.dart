@@ -13,15 +13,16 @@ class NavigatorCubit extends Cubit<NavigatorCubitState> implements Listenable {
   bool get hasListeners => _listeners.isNotEmpty;
 
   static const homePath = PathTemplate([]);
-  static const gamePath = PathTemplate([DynamicSegmentTemplate(param: 'seed')]);
   static const aboutPath = PathTemplate([PathSegmentTemplate(name: 'about')]);
+  static const gamePath = PathTemplate([DynamicSegmentTemplate(param: 'seed')]);
 
-  final pathTemplates = const [homePath, gamePath, aboutPath];
+  final pathTemplates = const [homePath, aboutPath, gamePath];
 
   @override
   void onChange(Change<NavigatorCubitState> change) {
     super.onChange(change);
     if (hasListeners) _listeners.forEach((callback) => callback);
+    print('rebuilding');
   }
 
   @override
