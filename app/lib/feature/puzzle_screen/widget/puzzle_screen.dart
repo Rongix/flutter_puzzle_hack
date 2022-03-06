@@ -1,17 +1,169 @@
-import 'package:flutter/material.dart';
+import 'dart:math';
+import 'dart:ui';
 
-class PuzzleScreen extends StatelessWidget {
+import 'package:app/extensions/iterable_extensions.dart';
+import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:sixteen_puzzle/slide_puzzle.dart';
+
+class PuzzleScreen extends StatefulWidget {
   const PuzzleScreen({
     required this.seed,
+    this.isHackMode = false,
     Key? key,
   }) : super(key: key);
 
   final String seed;
+  final bool isHackMode;
+
+  @override
+  State<PuzzleScreen> createState() => _PuzzleScreenState();
+}
+
+class _PuzzleScreenState extends State<PuzzleScreen> {
+  final SixteenPuzzleGenerator generator = const SixteenPuzzleGenerator();
+  bool isSelected = true;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(child: Text('PuzzleScreen: $seed')),
+      body: Center(
+        child: LayoutBuilder(
+          builder: (_, cstr) {
+            final windowMinSize = min(cstr.maxHeight, cstr.maxWidth);
+            final puzzleSize = min(400.0, windowMinSize);
+
+            return SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Center(
+                    child: PuzzleViewer(
+                      size: puzzleSize,
+                      puzzle: generator.puzzleFromSeed(widget.seed),
+                      isHackMode: widget.isHackMode,
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Column(
+                        children: [
+                          IconButton(
+                            onPressed: () {},
+                            icon: const Icon(MdiIcons.twitter),
+                          ),
+                          Text('Twitter', style: Theme.of(context).textTheme.caption),
+                        ],
+                      ),
+                      const SizedBox(width: 32),
+                      Column(
+                        children: [
+                          IconButton(
+                            onPressed: () {},
+                            icon: const Icon(MdiIcons.github),
+                          ),
+                          Text('Github', style: Theme.of(context).textTheme.caption),
+                        ],
+                      ),
+                      const SizedBox(width: 32),
+                      Column(
+                        children: [
+                          IconButton(
+                            onPressed: () {},
+                            icon: const Icon(MdiIcons.linkedin),
+                          ),
+                          Text('LinkedIn', style: Theme.of(context).textTheme.caption),
+                        ],
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            );
+          },
+        ),
+      ),
     );
   }
+}
+
+/// PuzzleViewer manages animations and effects of the puzzle grid.
+/// IDEA: Calculate how neighbouring influence each other (scaling, sides of the puzzle shrinking etc)
+class PuzzleViewer extends StatelessWidget {
+  const PuzzleViewer({required this.size, required this.puzzle, required this.isHackMode, Key? key})
+      : super(key: key);
+
+  /// height and width of a puzzle
+  final double size;
+  final List<int> puzzle;
+  final bool isHackMode;
+
+  @override
+  Widget build(BuildContext context) {
+    final tileSize = size / 4;
+
+    return SizedBox(
+      height: size,
+      width: size,
+      child: Stack(
+        children: [
+          ...puzzle.mapIndexed((e, i) {
+            if (e == 16 && !isHackMode) return const SizedBox();
+            return AnimatedPositioned(
+              key: ValueKey('PuzzleTile-$e'),
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.easeInOut,
+              left: i % 4 * tileSize,
+              top: i ~/ 4 * tileSize,
+              child: Opacity(
+                opacity: isHackMode && e == 16 ? 0.5 : 1,
+                child: PuzzleTile(
+                  size: tileSize,
+                  value: e,
+                ),
+              ),
+            );
+          }),
+        ],
+      ),
+    );
+  }
+}
+
+class PuzzleTile extends StatelessWidget {
+  const PuzzleTile({
+    required this.size,
+    required this.value,
+    Key? key,
+  }) : super(key: key);
+
+  /// max height and width of a puzzle tile
+  final double size;
+  final int value;
+
+  @override
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.all(3.5),
+        alignment: Alignment.center,
+        height: size,
+        width: size,
+        child: Card(
+          margin: EdgeInsets.zero,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+          ),
+          child: Container(
+            height: size,
+            width: size,
+            alignment: Alignment.center,
+            constraints: const BoxConstraints.expand(),
+            child: SelectableText(
+              value.toString(),
+              style: Theme.of(context).textTheme.headline6,
+            ),
+          ),
+        ),
+      );
 }
