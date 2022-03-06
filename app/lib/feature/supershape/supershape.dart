@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:app/extensions/path_extensions.dart';
+import 'package:flutter/animation.dart';
 import 'package:flutter/painting.dart';
 import 'package:vector_math/vector_math.dart' as vector;
 
@@ -72,11 +73,10 @@ class Supershape {
 
   static double _oneFunc(double x) => 1.0;
 
-  static Supershape lerp(Supershape a, Supershape b, double t) {
-    assert(
-      a.points.length == b.points.length,
-      'Cant lerp shapes with different ammount of control points',
-    );
+  static Supershape? lerp(Supershape? a, Supershape? b, double t) {
+    if (a == null && b == null) return null;
+    if (a == null) return b!;
+    if (b == null) return a;
 
     final path = Path();
     final points = <Offset>[];
@@ -115,4 +115,15 @@ class Supershape {
 
     return Offset(px, py);
   }
+}
+
+class SupershapeTween extends Tween<Supershape?> {
+  SupershapeTween({
+    Supershape? begin,
+    Supershape? end,
+  }) : super(begin: begin, end: end);
+
+  /// Returns the value this variable has at the given animation clock value.
+  @override
+  Supershape? lerp(double t) => Supershape.lerp(begin, end, t);
 }

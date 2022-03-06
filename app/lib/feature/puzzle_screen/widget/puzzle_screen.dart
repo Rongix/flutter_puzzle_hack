@@ -4,8 +4,11 @@ import 'package:app/extensions/iterable_extensions.dart';
 import 'package:app/feature/supershape/supershape.dart';
 import 'package:app/feature/supershape/supershape_painter.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:sixteen_puzzle/slide_puzzle.dart';
+
+import '../../supershape/animated_supershape.dart';
 
 class PuzzleScreen extends StatefulWidget {
   const PuzzleScreen({
@@ -38,14 +41,33 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final shape = CustomPaint(
+    // final shape = AnimatedContainer(
+    //   duration: const Duration(milliseconds: 300),
+    //   height: 100,
+    //   width: 100,
+    //   margin: EdgeInsets.all(puzzleFromSeed[0] * 3),
+    //   decoration: BoxDecoration(
+    //     color: Theme.of(context).cardTheme.color,
+    //     borderRadius: BorderRadius.all(Radius.circular(puzzleFromSeed[0].toDouble())),
+    //   ),
+    // );
+
+    final shape = AnimatedSupershape(
+      duration: const Duration(milliseconds: 1500),
+      supershape: supershape,
+      color: Theme.of(context).cardTheme.color!,
+      shadow: Theme.of(context).cardTheme.shadowColor!,
       size: const Size(100, 100),
-      painter: SupershapePainter(
-        supershape: supershape,
-        color: Theme.of(context).cardTheme.color!,
-        shadow: Theme.of(context).cardTheme.shadowColor!,
-      ),
     );
+
+    // CustomPaint(
+    //   size: const Size(100, 100),
+    //   painter: SupershapePainter(
+    //     supershape: supershape,
+    //     color: Theme.of(context).cardTheme.color!,
+    //     shadow: Theme.of(context).cardTheme.shadowColor!,
+    //   ),
+    // );
 
     return Scaffold(
       body: Center(
@@ -73,32 +95,33 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
                       Column(
                         children: [
                           IconButton(
-                            onPressed: () {},
-                            icon: const Icon(MdiIcons.twitter),
+                            onPressed: () => GoRouter.of(context).go('/'),
+                            icon: const Icon(MdiIcons.newBox),
                           ),
-                          Text('Twitter', style: Theme.of(context).textTheme.caption),
+                          Text('Reload', style: Theme.of(context).textTheme.caption),
                         ],
                       ),
-                      const SizedBox(width: 32),
-                      Column(
-                        children: [
-                          IconButton(
-                            onPressed: () {},
-                            icon: const Icon(MdiIcons.github),
-                          ),
-                          Text('Github', style: Theme.of(context).textTheme.caption),
-                        ],
-                      ),
-                      const SizedBox(width: 32),
-                      Column(
-                        children: [
-                          IconButton(
-                            onPressed: () {},
-                            icon: const Icon(MdiIcons.linkedin),
-                          ),
-                          Text('LinkedIn', style: Theme.of(context).textTheme.caption),
-                        ],
-                      ),
+                      // AnimatedContainer(),
+                      // const SizedBox(width: 32),
+                      // Column(
+                      //   children: [
+                      //     IconButton(
+                      //       onPressed: () {},
+                      //       icon: const Icon(MdiIcons.github),
+                      //     ),
+                      //     Text('Github', style: Theme.of(context).textTheme.caption),
+                      //   ],
+                      // ),
+                      // const SizedBox(width: 32),
+                      // Column(
+                      //   children: [
+                      //     IconButton(
+                      //       onPressed: () {},
+                      //       icon: const Icon(MdiIcons.linkedin),
+                      //     ),
+                      //     Text('LinkedIn', style: Theme.of(context).textTheme.caption),
+                      //   ],
+                      // ),
                     ],
                   ),
                 ],
