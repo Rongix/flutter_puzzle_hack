@@ -1,7 +1,8 @@
 import 'dart:math';
-import 'dart:ui';
 
 import 'package:app/extensions/iterable_extensions.dart';
+import 'package:app/feature/supershape/supershape.dart';
+import 'package:app/feature/supershape/supershape_painter.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:sixteen_puzzle/slide_puzzle.dart';
@@ -21,11 +22,31 @@ class PuzzleScreen extends StatefulWidget {
 }
 
 class _PuzzleScreenState extends State<PuzzleScreen> {
-  final SixteenPuzzleGenerator generator = const SixteenPuzzleGenerator();
+  late SixteenPuzzleGenerator generator;
+  late List<int> puzzleFromSeed;
+  late Supershape supershape;
+
   bool isSelected = true;
 
   @override
+  void didChangeDependencies() {
+    generator = const SixteenPuzzleGenerator();
+    puzzleFromSeed = generator.puzzleFromSeed(widget.seed);
+    supershape = Supershape.fromSeed(seed: widget.seed, radius: 100 / 2 - 10);
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final shape = CustomPaint(
+      size: const Size(100, 100),
+      painter: SupershapePainter(
+        supershape: supershape,
+        color: Theme.of(context).cardColor,
+        shadow: Theme.of(context).cardTheme.shadowColor!,
+      ),
+    );
+
     return Scaffold(
       body: Center(
         child: LayoutBuilder(
@@ -39,8 +60,9 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
                 children: [
                   Center(
                     child: PuzzleViewer(
+                      backgroundShape: shape,
                       size: puzzleSize,
-                      puzzle: generator.puzzleFromSeed(widget.seed),
+                      puzzle: puzzleFromSeed,
                       isHackMode: widget.isHackMode,
                     ),
                   ),
@@ -78,7 +100,7 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
                         ],
                       ),
                     ],
-                  )
+                  ),
                 ],
               ),
             );
@@ -92,13 +114,19 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
 /// PuzzleViewer manages animations and effects of the puzzle grid.
 /// IDEA: Calculate how neighbouring influence each other (scaling, sides of the puzzle shrinking etc)
 class PuzzleViewer extends StatelessWidget {
-  const PuzzleViewer({required this.size, required this.puzzle, required this.isHackMode, Key? key})
-      : super(key: key);
+  const PuzzleViewer({
+    required this.size,
+    required this.puzzle,
+    required this.isHackMode,
+    required this.backgroundShape,
+    Key? key,
+  }) : super(key: key);
 
   /// height and width of a puzzle
   final double size;
   final List<int> puzzle;
   final bool isHackMode;
+  final Widget backgroundShape;
 
   @override
   Widget build(BuildContext context) {
@@ -108,6 +136,7 @@ class PuzzleViewer extends StatelessWidget {
       height: size,
       width: size,
       child: Stack(
+        clipBehavior: Clip.none,
         children: [
           ...puzzle.mapIndexed((e, i) {
             if (e == 16 && !isHackMode) return const SizedBox();
@@ -120,6 +149,7 @@ class PuzzleViewer extends StatelessWidget {
               child: Opacity(
                 opacity: isHackMode && e == 16 ? 0.5 : 1,
                 child: PuzzleTile(
+                  backgroundShape: backgroundShape,
                   size: tileSize,
                   value: e,
                 ),
@@ -136,12 +166,14 @@ class PuzzleTile extends StatelessWidget {
   const PuzzleTile({
     required this.size,
     required this.value,
+    required this.backgroundShape,
     Key? key,
   }) : super(key: key);
 
   /// max height and width of a puzzle tile
   final double size;
   final int value;
+  final Widget backgroundShape;
 
   @override
   Widget build(BuildContext context) => Container(
@@ -149,21 +181,27 @@ class PuzzleTile extends StatelessWidget {
         alignment: Alignment.center,
         height: size,
         width: size,
-        child: Card(
-          margin: EdgeInsets.zero,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5),
-          ),
-          child: Container(
-            height: size,
-            width: size,
-            alignment: Alignment.center,
-            constraints: const BoxConstraints.expand(),
-            child: SelectableText(
-              value.toString(),
-              style: Theme.of(context).textTheme.headline6,
+        child: Stack(
+          children: [
+            backgroundShape,
+            Container(
+              height: size,
+              width: size,
+              alignment: Alignment.center,
+              constraints: const BoxConstraints.expand(),
+              child: SelectableText(
+                value.toString(),
+                style: Theme.of(context).primaryTextTheme.headline6,
+              ),
             ),
-          ),
+            // Card(
+            //   margin: EdgeInsets.zero,
+            //   shape: RoundedRectangleBorder(
+            //     borderRadius: BorderRadius.circular(5),
+            //   ),
+            //   child:
+            // ),
+          ],
         ),
       );
 }

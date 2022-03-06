@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:crypto/crypto.dart' as crypto;
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +21,8 @@ class ThemeCubitState extends Equatable {
   factory ThemeCubitState.fallbackTheme() => ThemeCubitState.fromSeed('ABCDEFGHIJKLMNOP');
 
   factory ThemeCubitState.fromSeed(String seed) {
-    final puzzleHashCode = crypto.md5.convert(seed.codeUnits).hashCode;
+    final puzzleHashCode = seed.hashCode;
+    print(puzzleHashCode);
     final palette = CorePalette.of(puzzleHashCode);
 
     return ThemeCubitState(palette, lighModeFromPalette(palette), darkModeFromPaletter(palette));
@@ -32,19 +35,39 @@ class ThemeCubitState extends Equatable {
   static ThemeData lighModeFromPalette(CorePalette palette) {
     return ThemeData(
       brightness: Brightness.light,
-      scaffoldBackgroundColor: Color(palette.neutral.get(90)),
+      scaffoldBackgroundColor: Color(palette.neutral.get(95)),
       backgroundColor: Color(palette.neutral.get(60)),
       shadowColor: Color(palette.neutral.get(10)),
+      cardColor: Color(palette.primary.get(70)),
       cardTheme: CardTheme(
-        color: Color(palette.primary.get(60)),
+        color: Color(palette.primary.get(70)),
         margin: EdgeInsets.zero,
         elevation: 15,
-        shadowColor: Color(palette.tertiary.get(80)),
+        shadowColor: Color(palette.primary.get(10)).withOpacity(.3),
+      ),
+      iconTheme: IconThemeData(
+        color: Color(palette.neutral.get(50)),
       ),
       textTheme: TextTheme(
+        caption: TextStyle(
+          color: Color(palette.neutral.get(50)),
+          fontSize: 10,
+          letterSpacing: 1.2,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      primaryTextTheme: TextTheme(
         headline6: TextStyle(
-          color: Color(palette.neutral.get(95)),
+          color: Color(palette.primary.get(99)),
+          shadows: [
+            Shadow(
+              offset: const Offset(2.0, 2.0),
+              blurRadius: 5.0,
+              color: Color(palette.neutralVariant.get(40)),
+            ),
+          ],
           fontWeight: FontWeight.w900,
+          fontFeatures: const [FontFeature.proportionalFigures()],
         ),
       ),
     );
@@ -53,33 +76,37 @@ class ThemeCubitState extends Equatable {
   static ThemeData darkModeFromPaletter(CorePalette palette) {
     return ThemeData(
       brightness: Brightness.dark,
-      scaffoldBackgroundColor: Color(palette.neutral.get(10)),
+      scaffoldBackgroundColor: Color(palette.neutral.get(15)),
       backgroundColor: Color(palette.neutral.get(40)),
-      splashColor: Color(palette.neutral.get(40)).withOpacity(0.3),
+      splashColor: Color(palette.primary.get(50)).withOpacity(0.3),
       highlightColor: Colors.transparent,
-      hoverColor: Color(palette.neutral.get(20)).withOpacity(0.5),
-
+      hoverColor: Color(palette.primary.get(50)).withOpacity(0.5),
       // shadowColor: Color(palette.neutral.get(10)),
+      cardColor: Color(palette.primary.get(35)),
       cardTheme: CardTheme(
-        color: Color(palette.primary.get(20)),
+        color: Color(palette.primary.get(35)),
         margin: EdgeInsets.zero,
         elevation: 15,
-        shadowColor: Color(palette.tertiary.get(20)),
+        shadowColor: Color(palette.primary.get(0)).withOpacity(0.4),
       ),
       iconTheme: IconThemeData(
         color: Color(palette.neutral.get(80)),
       ),
       textTheme: TextTheme(
-          headline6: TextStyle(
-            color: Color(palette.neutral.get(90)),
-            fontWeight: FontWeight.w900,
-          ),
-          caption: TextStyle(
-            color: Color(palette.neutral.get(70)),
-            fontSize: 10,
-            letterSpacing: 1.2,
-            fontWeight: FontWeight.w500,
-          )),
+        caption: TextStyle(
+          color: Color(palette.neutral.get(70)),
+          fontSize: 10,
+          letterSpacing: 1.2,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      primaryTextTheme: TextTheme(
+        headline6: TextStyle(
+          color: Color(palette.primary.get(97)),
+          fontWeight: FontWeight.w900,
+          fontFeatures: const [FontFeature.proportionalFigures()],
+        ),
+      ),
     );
   }
 

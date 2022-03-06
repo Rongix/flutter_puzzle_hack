@@ -8,7 +8,7 @@ void main() {
   late final SixteenPuzzleGenerator generator;
 
   setUpAll(() {
-    generator = SixteenPuzzleGenerator();
+    generator = const SixteenPuzzleGenerator();
   });
 
   group('generator tests', () {
@@ -34,10 +34,8 @@ void main() {
     });
 
     test('validator', () {
-      for (final puzzle in TestData.unsolvablePuzzles)
-        expect(generator.validate(puzzle), false);
-      for (final puzzle in TestData.solvablePuzzles)
-        expect(generator.validate(puzzle), true);
+      for (final puzzle in TestData.unsolvablePuzzles) expect(generator.validate(puzzle), false);
+      for (final puzzle in TestData.solvablePuzzles) expect(generator.validate(puzzle), true);
     });
   });
 }
