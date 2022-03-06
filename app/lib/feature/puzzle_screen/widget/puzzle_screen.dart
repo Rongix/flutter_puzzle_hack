@@ -42,7 +42,7 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
       size: const Size(100, 100),
       painter: SupershapePainter(
         supershape: supershape,
-        color: Theme.of(context).cardColor,
+        color: Theme.of(context).cardTheme.color!,
         shadow: Theme.of(context).cardTheme.shadowColor!,
       ),
     );

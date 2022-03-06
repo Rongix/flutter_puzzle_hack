@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:crypto/crypto.dart' as crypto;
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -38,12 +37,11 @@ class ThemeCubitState extends Equatable {
       scaffoldBackgroundColor: Color(palette.neutral.get(95)),
       backgroundColor: Color(palette.neutral.get(60)),
       shadowColor: Color(palette.neutral.get(10)),
-      cardColor: Color(palette.primary.get(70)),
       cardTheme: CardTheme(
-        color: Color(palette.primary.get(70)),
+        color: Color(palette.primary.get(60)),
         margin: EdgeInsets.zero,
         elevation: 15,
-        shadowColor: Color(palette.primary.get(10)).withOpacity(.3),
+        shadowColor: Color(palette.tertiary.get(40)).withOpacity(.5),
       ),
       iconTheme: IconThemeData(
         color: Color(palette.neutral.get(50)),
@@ -63,7 +61,7 @@ class ThemeCubitState extends Equatable {
             Shadow(
               offset: const Offset(2.0, 2.0),
               blurRadius: 5.0,
-              color: Color(palette.neutralVariant.get(40)),
+              color: Color(palette.tertiary.get(40)),
             ),
           ],
           fontWeight: FontWeight.w900,
@@ -87,7 +85,7 @@ class ThemeCubitState extends Equatable {
         color: Color(palette.primary.get(35)),
         margin: EdgeInsets.zero,
         elevation: 15,
-        shadowColor: Color(palette.primary.get(0)).withOpacity(0.4),
+        shadowColor: Color(palette.tertiary.get(20)).withOpacity(0.6),
       ),
       iconTheme: IconThemeData(
         color: Color(palette.neutral.get(80)),
@@ -102,7 +100,7 @@ class ThemeCubitState extends Equatable {
       ),
       primaryTextTheme: TextTheme(
         headline6: TextStyle(
-          color: Color(palette.primary.get(97)),
+          color: Color(palette.tertiary.get(97)),
           fontWeight: FontWeight.w900,
           fontFeatures: const [FontFeature.proportionalFigures()],
         ),

@@ -36,8 +36,6 @@ class Supershape {
     );
   }
 
-  static double _oneFunc(double x) => 1.0;
-
   factory Supershape.generateShape({
     required double radius,
     required double anglePower,
@@ -71,6 +69,8 @@ class Supershape {
 
   final List<Offset> points;
   final Path path;
+
+  static double _oneFunc(double x) => 1.0;
 
   static Supershape lerp(Supershape a, Supershape b, double t) {
     assert(
