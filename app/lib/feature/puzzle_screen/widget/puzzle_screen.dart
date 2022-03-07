@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:app/extensions/iterable_extensions.dart';
 import 'package:app/feature/supershape/supershape.dart';
-import 'package:app/feature/supershape/supershape_painter.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -94,11 +93,10 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
                     children: [
                       Column(
                         children: [
-                          IconButton(
-                            onPressed: () => GoRouter.of(context).go('/'),
-                            icon: const Icon(MdiIcons.newBox),
+                          GestureDetector(
+                            onTap: () => GoRouter.of(context).go('/'),
+                            child: const Icon(MdiIcons.newBox),
                           ),
-                          Text('Reload', style: Theme.of(context).textTheme.caption),
                         ],
                       ),
                       // AnimatedContainer(),
@@ -156,32 +154,37 @@ class PuzzleViewer extends StatelessWidget {
     final tileSize = size / 4;
 
     return SizedBox(
-      height: size,
-      width: size,
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          ...puzzle.mapIndexed((e, i) {
-            if (e == 16 && !isHackMode) return const SizedBox();
-            return AnimatedPositioned(
-              key: ValueKey('PuzzleTile-$e'),
-              duration: const Duration(milliseconds: 500),
-              curve: Curves.easeInOut,
-              left: i % 4 * tileSize,
-              top: i ~/ 4 * tileSize,
-              child: Opacity(
-                opacity: isHackMode && e == 16 ? 0.5 : 1,
-                child: PuzzleTile(
-                  backgroundShape: backgroundShape,
-                  size: tileSize,
-                  value: e,
-                ),
-              ),
-            );
-          }),
-        ],
-      ),
-    );
+        height: size,
+        width: size,
+        child: Transform.scale(
+          scale: 2,
+          child: backgroundShape,
+        )
+
+        // Stack(
+        //   clipBehavior: Clip.none,
+        //   children: [
+        //     ...puzzle.mapIndexed((e, i) {
+        //       if (e == 16 && !isHackMode) return const SizedBox();
+        //       return AnimatedPositioned(
+        //         key: ValueKey('PuzzleTile-$e'),
+        //         duration: const Duration(milliseconds: 500),
+        //         curve: Curves.easeInOut,
+        //         left: i % 4 * tileSize,
+        //         top: i ~/ 4 * tileSize,
+        //         child: Opacity(
+        //           opacity: isHackMode && e == 16 ? 0.5 : 1,
+        //           child: PuzzleTile(
+        //             backgroundShape: backgroundShape,
+        //             size: tileSize,
+        //             value: e,
+        //           ),
+        //         ),
+        //       );
+        //     }),
+        //   ],
+        // ),
+        );
   }
 }
 
@@ -212,7 +215,7 @@ class PuzzleTile extends StatelessWidget {
               width: size,
               alignment: Alignment.center,
               constraints: const BoxConstraints.expand(),
-              child: SelectableText(
+              child: Text(
                 value.toString(),
                 style: Theme.of(context).primaryTextTheme.headline6,
               ),
