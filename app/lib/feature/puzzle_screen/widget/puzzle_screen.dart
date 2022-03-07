@@ -52,6 +52,7 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
     // );
 
     final shape = AnimatedSupershape(
+      key: const ValueKey('bg-shape'),
       duration: const Duration(milliseconds: 1500),
       supershape: supershape,
       color: Theme.of(context).cardTheme.color!,
@@ -153,38 +154,42 @@ class PuzzleViewer extends StatelessWidget {
   Widget build(BuildContext context) {
     final tileSize = size / 4;
 
-    return SizedBox(
-        height: size,
-        width: size,
-        child: Transform.scale(
-          scale: 2,
-          child: backgroundShape,
-        )
+    // return SizedBox(
+    //     height: size,
+    //     width: size,
+    //     child: Transform.scale(
+    //       scale: 2,
+    //       child: backgroundShape,
+    //     )
+    // );
 
-        // Stack(
-        //   clipBehavior: Clip.none,
-        //   children: [
-        //     ...puzzle.mapIndexed((e, i) {
-        //       if (e == 16 && !isHackMode) return const SizedBox();
-        //       return AnimatedPositioned(
-        //         key: ValueKey('PuzzleTile-$e'),
-        //         duration: const Duration(milliseconds: 500),
-        //         curve: Curves.easeInOut,
-        //         left: i % 4 * tileSize,
-        //         top: i ~/ 4 * tileSize,
-        //         child: Opacity(
-        //           opacity: isHackMode && e == 16 ? 0.5 : 1,
-        //           child: PuzzleTile(
-        //             backgroundShape: backgroundShape,
-        //             size: tileSize,
-        //             value: e,
-        //           ),
-        //         ),
-        //       );
-        //     }),
-        //   ],
-        // ),
-        );
+    return SizedBox(
+      height: size,
+      width: size,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          ...puzzle.mapIndexed((e, i) {
+            if (e == 16 && !isHackMode) return const SizedBox();
+            return AnimatedPositioned(
+              key: ValueKey('PuzzleTile-$e'),
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.easeInOut,
+              left: i % 4 * tileSize,
+              top: i ~/ 4 * tileSize,
+              child: Opacity(
+                opacity: isHackMode && e == 16 ? 0.5 : 1,
+                child: PuzzleTile(
+                  backgroundShape: backgroundShape,
+                  size: tileSize,
+                  value: e,
+                ),
+              ),
+            );
+          }),
+        ],
+      ),
+    );
   }
 }
 

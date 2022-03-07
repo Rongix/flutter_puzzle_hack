@@ -10,7 +10,8 @@ class AnimatedSupershape extends ImplicitlyAnimatedWidget {
     required this.shadow,
     required this.size,
     Curve curve = Curves.easeOutQuart,
-  }) : super(duration: duration, curve: curve);
+    Key? key,
+  }) : super(duration: duration, curve: curve, key: key);
 
   final Supershape supershape;
   final Color color;
