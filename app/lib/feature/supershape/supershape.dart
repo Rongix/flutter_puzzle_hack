@@ -11,7 +11,6 @@ class Supershape {
   factory Supershape.fromSeed({
     required String seed,
     required double radius,
-    Offset center = Offset.zero,
     double angularPrecission = 0.1,
   }) {
     print('Supershape.fromSeed: $seed');
@@ -24,7 +23,6 @@ class Supershape {
 
     return Supershape.generateShape(
       angularPrecission: angularPrecission,
-      center: center,
       radius: radius,
       numeratorBuilder: (angle) => specialFeature1 ? pow(cos(c * angle).abs(), b).toDouble() : 1,
       denominatorPower: a,
@@ -41,7 +39,6 @@ class Supershape {
     required double radius,
     required double anglePower,
     required double denominatorPower,
-    Offset center = Offset.zero,
     double Function(double angle) numeratorBuilder = _oneFunc,
     double angularPrecission = 1.0,
     double angleMultiplier = 1.0,
@@ -53,7 +50,6 @@ class Supershape {
       final angle = vector.radians(i) * angleMultiplier;
       final point = computePoint(
         angle: angle,
-        center: center,
         shapeRadius: radius,
         numerator: numeratorBuilder(angle),
         angleMultiplier: angleMultiplier,
@@ -94,7 +90,6 @@ class Supershape {
 
   /// angle - in radians
   static Offset computePoint({
-    required Offset center,
     required double angle,
     required double anglePower,
     required double denominatorPower,
@@ -110,12 +105,14 @@ class Supershape {
     final denominator = pow(cosPart + sinPart, denominatorPower);
     final result = numerator / denominator;
 
-    final px = center.dx + (shapeRadius * result) * cos(angle);
-    final py = center.dy + (shapeRadius * result) * sin(angle);
+    final px = shapeRadius * result * cos(angle);
+    final py = shapeRadius * result * sin(angle);
 
     return Offset(px, py);
   }
 }
+
+class SupershapePoint {}
 
 class SupershapeTween extends Tween<Supershape?> {
   SupershapeTween({
