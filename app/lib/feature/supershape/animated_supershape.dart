@@ -6,16 +6,16 @@ class AnimatedSupershape extends ImplicitlyAnimatedWidget {
   const AnimatedSupershape({
     required this.supershape,
     required Duration duration,
-    required this.color,
-    required this.shadow,
     required this.size,
+    this.color,
+    this.shadow,
     Curve curve = Curves.easeOutQuart,
     Key? key,
   }) : super(duration: duration, curve: curve, key: key);
 
   final Supershape supershape;
-  final Color color;
-  final Color shadow;
+  final Color? color;
+  final Color? shadow;
   final Size size;
 
   @override

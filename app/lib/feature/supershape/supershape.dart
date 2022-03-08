@@ -6,11 +6,10 @@ import 'package:flutter/painting.dart';
 import 'package:vector_math/vector_math.dart' as vector;
 
 class Supershape {
-  const Supershape(this.points, this.path);
+  const Supershape(this.points);
 
   factory Supershape.fromSeed({
     required String seed,
-    required double radius,
     double angularPrecission = 0.1,
   }) {
     print('Supershape.fromSeed: $seed');
@@ -26,7 +25,6 @@ class Supershape {
     return Supershape.generateShape(
       random: generatorRandom,
       angularPrecission: angularPrecission,
-      radius: radius,
       numeratorBuilder: (angle) => specialFeature1 ? pow(cos(c * angle).abs(), b).toDouble() : 1,
       denominatorPower: a,
       angleMultiplier: b.toDouble(),
@@ -40,36 +38,39 @@ class Supershape {
 
   factory Supershape.generateShape({
     required double random,
-    required double radius,
     required double anglePower,
     required double denominatorPower,
     double Function(double angle) numeratorBuilder = _oneFunc,
     double angularPrecission = 1.0,
     double angleMultiplier = 1.0,
   }) {
-    final path = Path();
     final points = <SupershapePoint>[];
 
     for (var i = .0; i <= 360.0 - angularPrecission; i += angularPrecission) {
       final angle = vector.radians(i) + random;
       final sp = computePoint(
         angle: angle,
-        radius: radius,
         numerator: numeratorBuilder(angle),
         angleMultiplier: angleMultiplier,
         anglePower: anglePower,
         denominatorPower: denominatorPower,
       );
       points.add(sp);
-      final point = sp.toPoint();
-      i == 0 ? path.moveToOffset(point) : path.lineToOffset(point);
     }
 
-    return Supershape(points, path..close());
+    return Supershape(points);
   }
 
   final List<SupershapePoint> points;
-  final Path path;
+
+  Path path(double radius) {
+    final path = Path()..moveToOffset(points.first.toPoint(radius));
+    for (var i = 1; i < points.length; i++) {
+      path.lineToOffset(points[i].toPoint(radius));
+    }
+    path.close();
+    return path;
+  }
 
   static double _oneFunc(double x) => 1.0;
 
@@ -78,25 +79,20 @@ class Supershape {
     if (a == null) return b!;
     if (b == null) return a;
 
-    final path = Path();
     final points = <SupershapePoint>[];
 
     for (var i = 0; i < a.points.length; i++) {
       final position = SupershapePoint.lerp(a.points[i], b.points[i], t)!;
-      final point = position.toPoint();
-
       points.add(position);
-      i == 0 ? path.moveToOffset(point) : path.lineToOffset(point);
     }
 
-    return Supershape(points, path..close());
+    return Supershape(points);
   }
 
   static SupershapePoint computePoint({
     required double angle,
     required double anglePower,
     required double denominatorPower,
-    required double radius,
     double angleMultiplier = 1.0,
     double numerator = 1.0,
   }) {
@@ -108,18 +104,17 @@ class Supershape {
     final denominator = pow(cosPart + sinPart, denominatorPower);
     final result = numerator / denominator;
 
-    return SupershapePoint(result, angle, radius);
+    return SupershapePoint(result, angle);
   }
 }
 
 class SupershapePoint {
-  const SupershapePoint(this.shapeValue, this.angle, this.radius);
+  const SupershapePoint(this.shapeValue, this.angle);
 
   final double shapeValue;
   final double angle;
-  final double radius;
 
-  Offset toPoint() {
+  Offset toPoint(double radius) {
     final px = radius * shapeValue * cos(angle);
     final py = radius * shapeValue * sin(angle);
 
@@ -134,7 +129,6 @@ class SupershapePoint {
     return SupershapePoint(
       lerpDouble(a.shapeValue, b.shapeValue, t),
       lerpDouble(a.angle, b.angle, t),
-      lerpDouble(a.radius, b.radius, t),
     );
   }
 }

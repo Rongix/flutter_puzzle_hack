@@ -31,44 +31,7 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
   bool isSelected = true;
 
   @override
-  void didChangeDependencies() {
-    generator = const SixteenPuzzleGenerator();
-    puzzleFromSeed = generator.puzzleFromSeed(widget.seed);
-    supershape = Supershape.fromSeed(seed: widget.seed, radius: 100 / 2 - 10);
-    super.didChangeDependencies();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    // final shape = AnimatedContainer(
-    //   duration: const Duration(milliseconds: 300),
-    //   height: 100,
-    //   width: 100,
-    //   margin: EdgeInsets.all(puzzleFromSeed[0] * 3),
-    //   decoration: BoxDecoration(
-    //     color: Theme.of(context).cardTheme.color,
-    //     borderRadius: BorderRadius.all(Radius.circular(puzzleFromSeed[0].toDouble())),
-    //   ),
-    // );
-
-    final shape = AnimatedSupershape(
-      key: const ValueKey('bg-shape'),
-      duration: const Duration(milliseconds: 1500),
-      supershape: supershape,
-      color: Theme.of(context).cardTheme.color!,
-      shadow: Theme.of(context).cardTheme.shadowColor!,
-      size: const Size(100, 100),
-    );
-
-    // CustomPaint(
-    //   size: const Size(100, 100),
-    //   painter: SupershapePainter(
-    //     supershape: supershape,
-    //     color: Theme.of(context).cardTheme.color!,
-    //     shadow: Theme.of(context).cardTheme.shadowColor!,
-    //   ),
-    // );
-
     return Scaffold(
       body: Center(
         child: LayoutBuilder(
@@ -82,10 +45,9 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
                 children: [
                   Center(
                     child: PuzzleViewer(
-                      backgroundShape: shape,
                       size: puzzleSize,
-                      puzzle: puzzleFromSeed,
                       isHackMode: widget.isHackMode,
+                      seed: widget.seed,
                     ),
                   ),
                   const SizedBox(height: 32),
@@ -100,27 +62,6 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
                           ),
                         ],
                       ),
-                      // AnimatedContainer(),
-                      // const SizedBox(width: 32),
-                      // Column(
-                      //   children: [
-                      //     IconButton(
-                      //       onPressed: () {},
-                      //       icon: const Icon(MdiIcons.github),
-                      //     ),
-                      //     Text('Github', style: Theme.of(context).textTheme.caption),
-                      //   ],
-                      // ),
-                      // const SizedBox(width: 32),
-                      // Column(
-                      //   children: [
-                      //     IconButton(
-                      //       onPressed: () {},
-                      //       icon: const Icon(MdiIcons.linkedin),
-                      //     ),
-                      //     Text('LinkedIn', style: Theme.of(context).textTheme.caption),
-                      //   ],
-                      // ),
                     ],
                   ),
                 ],
@@ -136,32 +77,37 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
 /// PuzzleViewer manages animations and effects of the puzzle grid.
 /// IDEA: Calculate how neighbouring influence each other (scaling, sides of the puzzle shrinking etc)
 class PuzzleViewer extends StatelessWidget {
-  const PuzzleViewer({
+  PuzzleViewer({
     required this.size,
-    required this.puzzle,
     required this.isHackMode,
-    required this.backgroundShape,
+    required this.seed,
     Key? key,
-  }) : super(key: key);
+  }) : super(key: key) {
+    puzzle = generator.puzzleFromSeed(seed);
+    supershape = Supershape.fromSeed(seed: seed);
+  }
 
-  /// height and width of a puzzle
   final double size;
-  final List<int> puzzle;
   final bool isHackMode;
-  final Widget backgroundShape;
+  final String seed;
+
+  static const SixteenPuzzleGenerator generator = SixteenPuzzleGenerator();
+
+  late final List<int> puzzle;
+  late final Supershape supershape;
+
+  double get tileSize => size / 4;
 
   @override
   Widget build(BuildContext context) {
-    final tileSize = size / 4;
-
-    // return SizedBox(
-    //     height: size,
-    //     width: size,
-    //     child: Transform.scale(
-    //       scale: 2,
-    //       child: backgroundShape,
-    //     )
-    // );
+    final shape = AnimatedSupershape(
+      key: const ValueKey('bg-shape'),
+      duration: const Duration(milliseconds: 1500),
+      supershape: supershape,
+      color: Theme.of(context).cardTheme.color,
+      shadow: Theme.of(context).cardTheme.shadowColor,
+      size: Size(tileSize, tileSize),
+    );
 
     return SizedBox(
       height: size,
@@ -180,7 +126,7 @@ class PuzzleViewer extends StatelessWidget {
               child: Opacity(
                 opacity: isHackMode && e == 16 ? 0.5 : 1,
                 child: PuzzleTile(
-                  backgroundShape: backgroundShape,
+                  backgroundShape: shape,
                   size: tileSize,
                   value: e,
                 ),
