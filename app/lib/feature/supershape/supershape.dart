@@ -1,12 +1,15 @@
 import 'dart:math';
 
 import 'package:app/extensions/path_extensions.dart';
+import 'package:app/feature/supershape/supershape_config.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/painting.dart';
 import 'package:vector_math/vector_math.dart' as vector;
 
+typedef doubleBuilder = double Function(double value);
+
 class Supershape {
-  const Supershape(this.points);
+  const Supershape(this.points, this.angleOffset);
 
   factory Supershape.fromSeed({
     required String seed,
@@ -14,40 +17,55 @@ class Supershape {
   }) {
     print('Supershape.fromSeed: $seed');
     final random = Random(seed.hashCode);
-    final a = (random.nextDouble() / 4) + 0.25;
-    final b = random.nextInt(8) + 1;
-    final c = random.nextInt(3) + 2;
-    final specialFeature1 = random.nextInt(11) > 7;
-    final specialFeature2 = random.nextInt(5) > 3;
+    final config = SupershapeConfig.seeds[random.nextInt(SupershapeConfig.seeds.length)];
+    // final config = SupershapeConfig.seedPlanetoid;
 
-    final generatorRandom = random.nextDouble();
+    // final a = (random.nextDouble() / 4) + 0.25;
+    // final b = random.nextInt(8) + 1;
+    // final c = random.nextInt(3) + 2;
+    // final specialFeature1 = random.nextInt(11) > 7;
+    // final specialFeature2 = random.nextInt(5) > 3;
+
+    // final generatorRandom = random.nextDouble();
+
+    // final config = SupershapeConfig.seedVanillaFlower;
+
+    print(config.name);
 
     return Supershape.generateShape(
-      random: generatorRandom,
-      angularPrecission: angularPrecission,
-      numeratorBuilder: (angle) => specialFeature1 ? pow(cos(c * angle).abs(), b).toDouble() : 1,
-      denominatorPower: a,
-      angleMultiplier: b.toDouble(),
-      anglePower: specialFeature2
-          ? 2 / b
-          : b > 6
-              ? 4
-              : b.toDouble(),
-    );
+        angleOffset: random.nextDouble() + 0.5,
+        angularPrecission: angularPrecission,
+        numeratorBuilder: config.numeratorBuilder,
+        denominatorPower: config.denominatorPower,
+        angleMultiplier: config.angleMultiplier,
+        anglePower: config.anglePower);
+
+    // return Supershape.generateShape(
+    //   angleOffset: generatorRandom,
+    //   angularPrecission: angularPrecission,
+    //   numeratorBuilder: (angle) => specialFeature1 ? pow(cos(c * angle).abs(), b).toDouble() : 1,
+    //   denominatorPower: a,
+    //   angleMultiplier: b.toDouble(),
+    //   anglePower: specialFeature2
+    //       ? 2 / b
+    //       : b > 6
+    //           ? 4
+    //           : b.toDouble(),
+    // );
   }
 
   factory Supershape.generateShape({
-    required double random,
+    required double angleOffset,
     required double anglePower,
     required double denominatorPower,
-    double Function(double angle) numeratorBuilder = _oneFunc,
+    doubleBuilder numeratorBuilder = _oneFunc,
     double angularPrecission = 1.0,
     double angleMultiplier = 1.0,
   }) {
     final points = <SupershapePoint>[];
 
     for (var i = .0; i <= 360.0 - angularPrecission; i += angularPrecission) {
-      final angle = vector.radians(i) + random;
+      final angle = vector.radians(i) + angleOffset;
       final sp = computePoint(
         angle: angle,
         numerator: numeratorBuilder(angle),
@@ -58,15 +76,20 @@ class Supershape {
       points.add(sp);
     }
 
-    return Supershape(points);
+    return Supershape(points, angleOffset);
   }
 
   final List<SupershapePoint> points;
+  final double angleOffset;
 
   Path path(double radius) {
-    final path = Path()..moveToOffset(points.first.toPoint(radius));
+    final path = Path()..moveToOffset(points.first.toPoint(radius, angleOffset));
+    final angularPrecission = 360 / points.length;
     for (var i = 1; i < points.length; i++) {
-      path.lineToOffset(points[i].toPoint(radius));
+      path.lineToOffset(points[i].toPoint(
+        radius,
+        vector.radians(angularPrecission * i) + angleOffset,
+      ));
     }
     path.close();
     return path;
@@ -86,7 +109,7 @@ class Supershape {
       points.add(position);
     }
 
-    return Supershape(points);
+    return Supershape(points, lerpDouble(a.angleOffset, b.angleOffset, t));
   }
 
   static SupershapePoint computePoint({
@@ -104,17 +127,16 @@ class Supershape {
     final denominator = pow(cosPart + sinPart, denominatorPower);
     final result = numerator / denominator;
 
-    return SupershapePoint(result, angle);
+    return SupershapePoint(result);
   }
 }
 
 class SupershapePoint {
-  const SupershapePoint(this.shapeValue, this.angle);
+  const SupershapePoint(this.shapeValue);
 
   final double shapeValue;
-  final double angle;
 
-  Offset toPoint(double radius) {
+  Offset toPoint(double radius, double angle) {
     final px = radius * shapeValue * cos(angle);
     final py = radius * shapeValue * sin(angle);
 
@@ -128,7 +150,6 @@ class SupershapePoint {
 
     return SupershapePoint(
       lerpDouble(a.shapeValue, b.shapeValue, t),
-      lerpDouble(a.angle, b.angle, t),
     );
   }
 }

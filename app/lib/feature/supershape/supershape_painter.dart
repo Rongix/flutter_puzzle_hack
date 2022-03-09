@@ -24,8 +24,9 @@ class SupershapePainter extends CustomPainter {
       ..style = PaintingStyle.fill;
 
     canvas.translate(size.width / 2, size.height / 2);
-    // canvas.drawShadow(supershape!.path, shadow ?? Colors.black, 10, false);
-    canvas.drawPath(supershape!.path(size.width * 0.8 / 2), fillPaint);
+    final path = supershape!.path(size.width * 0.8 / 2);
+    canvas.drawShadow(path, shadow ?? Colors.black, 15, false);
+    canvas.drawPath(path, fillPaint);
   }
 
   @override
