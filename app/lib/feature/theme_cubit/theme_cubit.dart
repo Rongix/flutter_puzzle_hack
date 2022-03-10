@@ -17,16 +17,14 @@ class ThemeCubit extends Cubit<ThemeCubitState> {
 class ThemeCubitState extends Equatable {
   const ThemeCubitState(this.palette, this.lightMode, this.darkMode);
 
-  factory ThemeCubitState.fallbackTheme() =>
-      ThemeCubitState.fromSeed('ABCDEFGHIJKLMNOP');
+  factory ThemeCubitState.fallbackTheme() => ThemeCubitState.fromSeed('ABCDEFGHIJKLMNOP');
 
   factory ThemeCubitState.fromSeed(String seed) {
     final puzzleHashCode = seed.hashCode;
     print(puzzleHashCode);
     final palette = CorePalette.of(puzzleHashCode);
 
-    return ThemeCubitState(
-        palette, lighModeFromPalette(palette), darkModeFromPaletter(palette));
+    return ThemeCubitState(palette, lighModeFromPalette(palette), darkModeFromPaletter(palette));
   }
 
   final CorePalette palette;
