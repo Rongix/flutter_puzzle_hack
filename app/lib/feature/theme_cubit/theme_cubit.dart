@@ -37,11 +37,9 @@ class ThemeCubitState extends Equatable {
       scaffoldBackgroundColor: Color(palette.neutral.get(95)),
       backgroundColor: Color(palette.neutral.get(60)),
       shadowColor: Color(palette.neutral.get(10)),
-      cardTheme: CardTheme(
-        color: Color(palette.primary.get(60)),
-        margin: EdgeInsets.zero,
-        elevation: 15,
-        shadowColor: Color(palette.tertiary.get(40)).withOpacity(.5),
+      colorScheme: ColorScheme.light(
+        primary: Color(palette.primary.get(55)),
+        primaryContainer: Color(palette.primary.get(65)),
       ),
       iconTheme: IconThemeData(
         color: Color(palette.neutral.get(50)),
@@ -74,18 +72,14 @@ class ThemeCubitState extends Equatable {
   static ThemeData darkModeFromPaletter(CorePalette palette) {
     return ThemeData(
       brightness: Brightness.dark,
-      scaffoldBackgroundColor: Color(palette.tertiary.get(15)),
+      scaffoldBackgroundColor: Color(palette.neutral.get(10)),
       backgroundColor: Color(palette.neutral.get(40)),
       splashColor: Color(palette.neutral.get(50)).withOpacity(0.1),
       highlightColor: Colors.transparent,
       hoverColor: Color(palette.neutral.get(50)).withOpacity(0.1),
-      // shadowColor: Color(palette.neutral.get(10)),
-      cardColor: Color(palette.primary.get(35)),
-      cardTheme: CardTheme(
-        color: Color(palette.primary.get(35)),
-        margin: EdgeInsets.zero,
-        elevation: 15,
-        shadowColor: Color(palette.tertiary.get(20)).withOpacity(0.6),
+      colorScheme: ColorScheme.dark(
+        primary: Color(palette.primary.get(35)),
+        primaryContainer: Color(palette.primary.get(25)),
       ),
       iconTheme: IconThemeData(
         color: Color(palette.neutral.get(80)),

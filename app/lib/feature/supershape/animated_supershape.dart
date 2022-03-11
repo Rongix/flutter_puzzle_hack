@@ -7,15 +7,15 @@ class AnimatedSupershape extends ImplicitlyAnimatedWidget {
     required this.supershape,
     required Duration duration,
     required this.size,
-    this.color,
-    this.shadow,
+    required this.color1,
+    required this.color2,
     Curve curve = Curves.easeOutQuart,
     Key? key,
   }) : super(duration: duration, curve: curve, key: key);
 
   final Supershape supershape;
-  final Color? color;
-  final Color? shadow;
+  final Color color1;
+  final Color color2;
   final Size size;
 
   @override
@@ -39,8 +39,8 @@ class _AnimatedSupershapeState extends AnimatedWidgetBaseState<AnimatedSupershap
       size: widget.size,
       painter: SupershapePainter(
         supershape: _supershape?.evaluate(animation),
-        color: widget.color,
-        shadow: widget.shadow,
+        color1: widget.color1,
+        color2: widget.color2,
       ),
     );
   }

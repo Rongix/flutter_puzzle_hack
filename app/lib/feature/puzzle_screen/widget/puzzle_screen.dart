@@ -104,8 +104,8 @@ class PuzzleViewer extends StatelessWidget {
       key: const ValueKey('bg-shape'),
       duration: const Duration(milliseconds: 1500),
       supershape: supershape,
-      color: Theme.of(context).cardTheme.color,
-      shadow: Theme.of(context).cardTheme.shadowColor,
+      color1: Theme.of(context).colorScheme.primary,
+      color2: Theme.of(context).colorScheme.primaryContainer,
       size: Size(tileSize, tileSize),
     );
 
