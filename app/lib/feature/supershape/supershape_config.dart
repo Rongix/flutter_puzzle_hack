@@ -16,7 +16,7 @@ class SupershapeConfig {
 
   final String name;
   final double angleOffset;
-  final doubleBuilder numeratorBuilder;
+  final DoubleBuilder numeratorBuilder;
   final double denominatorPower;
   final double angleMultiplier;
   final double anglePower;
@@ -222,8 +222,8 @@ class SupershapeConfig {
 
   // 18
   static SupershapeConfig seedStar7 = SupershapeConfig(
-    name: 'Star7',
-    numeratorBuilder: (_) => 2.2,
+    name: 'Chestnut',
+    numeratorBuilder: (_) => 2.5,
     angleMultiplier: 7 / 4,
     anglePower: 0.5,
     denominatorPower: 1 / 0.5,

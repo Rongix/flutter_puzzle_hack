@@ -74,7 +74,7 @@ class ThemeCubitState extends Equatable {
   static ThemeData darkModeFromPaletter(CorePalette palette) {
     return ThemeData(
       brightness: Brightness.dark,
-      scaffoldBackgroundColor: Color(palette.neutral.get(10)),
+      scaffoldBackgroundColor: Color(palette.tertiary.get(15)),
       backgroundColor: Color(palette.neutral.get(40)),
       splashColor: Color(palette.neutral.get(50)).withOpacity(0.1),
       highlightColor: Colors.transparent,

@@ -6,7 +6,7 @@ import 'package:flutter/animation.dart';
 import 'package:flutter/painting.dart';
 import 'package:vector_math/vector_math.dart' as vector;
 
-typedef doubleBuilder = double Function(double value);
+typedef DoubleBuilder = double Function(double value);
 
 class Supershape {
   const Supershape(this.points, this.angleOffset);
@@ -18,18 +18,7 @@ class Supershape {
     print('Supershape.fromSeed: $seed');
     final random = Random(seed.hashCode);
     final config = SupershapeConfig.seeds[random.nextInt(SupershapeConfig.seeds.length)];
-    // final config = SupershapeConfig.seedPlanetoid;
-
-    // final a = (random.nextDouble() / 4) + 0.25;
-    // final b = random.nextInt(8) + 1;
-    // final c = random.nextInt(3) + 2;
-    // final specialFeature1 = random.nextInt(11) > 7;
-    // final specialFeature2 = random.nextInt(5) > 3;
-
-    // final generatorRandom = random.nextDouble();
-
-    // final config = SupershapeConfig.seedVanillaFlower;
-
+    // final config = SupershapeConfig.seedStar7;
     print(config.name);
 
     return Supershape.generateShape(
@@ -58,7 +47,7 @@ class Supershape {
     required double angleOffset,
     required double anglePower,
     required double denominatorPower,
-    doubleBuilder numeratorBuilder = _oneFunc,
+    DoubleBuilder numeratorBuilder = _oneFunc,
     double angularPrecission = 1.0,
     double angleMultiplier = 1.0,
   }) {

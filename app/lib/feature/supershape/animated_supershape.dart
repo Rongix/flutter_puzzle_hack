@@ -24,18 +24,12 @@ class AnimatedSupershape extends ImplicitlyAnimatedWidget {
 
 class _AnimatedSupershapeState extends AnimatedWidgetBaseState<AnimatedSupershape> {
   SupershapeTween? _supershape;
-  ColorTween? _color;
-  ColorTween? _shadow;
 
   @override
   void forEachTween(TweenVisitor<dynamic> visitor) {
     _supershape = visitor(
             _supershape, widget.supershape, (dynamic value) => SupershapeTween(begin: value as Supershape))
         as SupershapeTween?;
-    _color =
-        visitor(_color, widget.color, (dynamic value) => ColorTween(begin: value as Color)) as ColorTween?;
-    _shadow =
-        visitor(_shadow, widget.shadow, (dynamic value) => ColorTween(begin: value as Color)) as ColorTween?;
   }
 
   @override
@@ -45,8 +39,8 @@ class _AnimatedSupershapeState extends AnimatedWidgetBaseState<AnimatedSupershap
       size: widget.size,
       painter: SupershapePainter(
         supershape: _supershape?.evaluate(animation),
-        color: _color?.evaluate(animation),
-        shadow: _shadow?.evaluate(animation),
+        color: widget.color,
+        shadow: widget.shadow,
       ),
     );
   }

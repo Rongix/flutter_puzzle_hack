@@ -171,13 +171,6 @@ class PuzzleTile extends StatelessWidget {
                 style: Theme.of(context).primaryTextTheme.headline6,
               ),
             ),
-            // Card(
-            //   margin: EdgeInsets.zero,
-            //   shape: RoundedRectangleBorder(
-            //     borderRadius: BorderRadius.circular(5),
-            //   ),
-            //   child:
-            // ),
           ],
         ),
       );

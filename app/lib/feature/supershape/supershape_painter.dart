@@ -30,7 +30,5 @@ class SupershapePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true;
-  }
+  bool shouldRepaint(covariant SupershapePainter oldDelegate) => true;
 }
