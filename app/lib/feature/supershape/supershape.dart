@@ -13,7 +13,7 @@ class Supershape {
 
   factory Supershape.fromSeed({
     required String seed,
-    double angularPrecission = 0.1,
+    double angularPrecission = 1,
   }) {
     print('Supershape.fromSeed: $seed');
     final random = Random(seed.hashCode);

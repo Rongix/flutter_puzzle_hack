@@ -1,7 +1,9 @@
 import 'dart:math';
 
 import 'package:app/extensions/iterable_extensions.dart';
+import 'package:app/feature/puzzle_screen/widget/puzzle_background.dart';
 import 'package:app/feature/supershape/supershape.dart';
+import 'package:app/widgets/delayed_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -24,51 +26,51 @@ class PuzzleScreen extends StatefulWidget {
 }
 
 class _PuzzleScreenState extends State<PuzzleScreen> {
-  late SixteenPuzzleGenerator generator;
-  late List<int> puzzleFromSeed;
-  late Supershape supershape;
-
-  bool isSelected = true;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: LayoutBuilder(
-          builder: (_, cstr) {
-            final windowMinSize = min(cstr.maxHeight, cstr.maxWidth);
-            final puzzleSize = min(400.0, windowMinSize);
+      body: Stack(
+        children: [
+          const PuzzleBackground(),
+          Center(
+            child: LayoutBuilder(
+              builder: (_, cstr) {
+                final windowMinSize = min(cstr.maxHeight, cstr.maxWidth);
+                final puzzleSize = min(400.0, windowMinSize);
 
-            return SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Center(
-                    child: PuzzleViewer(
-                      size: puzzleSize,
-                      isHackMode: widget.isHackMode,
-                      seed: widget.seed,
-                    ),
-                  ),
-                  const SizedBox(height: 32),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
+                return SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Column(
+                      const SizedBox(height: 32),
+                      Center(
+                        child: PuzzleViewer(
+                          size: puzzleSize,
+                          isHackMode: widget.isHackMode,
+                          seed: widget.seed,
+                        ),
+                      ),
+                      const SizedBox(height: 60),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          GestureDetector(
-                            onTap: () => GoRouter.of(context).go('/'),
-                            child: const Icon(MdiIcons.newBox),
+                          Column(
+                            children: [
+                              GestureDetector(
+                                onTap: () => GoRouter.of(context).go('/'),
+                                child: const Icon(MdiIcons.restart),
+                              ),
+                            ],
                           ),
                         ],
                       ),
                     ],
                   ),
-                ],
-              ),
-            );
-          },
-        ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -126,6 +128,7 @@ class PuzzleViewer extends StatelessWidget {
               child: Opacity(
                 opacity: isHackMode && e == 16 ? 0.5 : 1,
                 child: PuzzleTile(
+                  seed: seed,
                   backgroundShape: shape,
                   size: tileSize,
                   value: e,
@@ -144,6 +147,7 @@ class PuzzleTile extends StatelessWidget {
     required this.size,
     required this.value,
     required this.backgroundShape,
+    required this.seed,
     Key? key,
   }) : super(key: key);
 
@@ -151,6 +155,7 @@ class PuzzleTile extends StatelessWidget {
   final double size;
   final int value;
   final Widget backgroundShape;
+  final String seed;
 
   @override
   Widget build(BuildContext context) => Container(
