@@ -5,5 +5,6 @@ import 'app/app.dart';
 
 void main() {
   setupInjection();
+  Paint.enableDithering = true;
   runApp(const App());
 }

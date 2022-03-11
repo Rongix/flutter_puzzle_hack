@@ -35,7 +35,7 @@ class ThemeCubitState extends Equatable {
     return ThemeData(
       brightness: Brightness.light,
       scaffoldBackgroundColor: Color(palette.neutral.get(95)),
-      backgroundColor: Color(palette.primary.get(95)),
+      backgroundColor: Color(palette.primary.get(97)),
       shadowColor: Color(palette.neutral.get(10)),
       colorScheme: ColorScheme.light(
         primary: Color(palette.primary.get(60)),
@@ -73,7 +73,7 @@ class ThemeCubitState extends Equatable {
     return ThemeData(
       brightness: Brightness.dark,
       scaffoldBackgroundColor: Color(palette.neutral.get(10)),
-      backgroundColor: Color(palette.primary.get(10)),
+      backgroundColor: Color(palette.primary.get(03)),
       splashColor: Color(palette.neutral.get(50)).withOpacity(0.1),
       highlightColor: Colors.transparent,
       hoverColor: Color(palette.neutral.get(50)).withOpacity(0.1),
