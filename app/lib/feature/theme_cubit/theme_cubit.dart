@@ -74,9 +74,6 @@ class ThemeCubitState extends Equatable {
       brightness: Brightness.dark,
       scaffoldBackgroundColor: Color(palette.neutral.get(10)),
       backgroundColor: Color(palette.primary.get(03)),
-      splashColor: Color(palette.neutral.get(50)).withOpacity(0.1),
-      highlightColor: Colors.transparent,
-      hoverColor: Color(palette.neutral.get(50)).withOpacity(0.1),
       colorScheme: ColorScheme.dark(
         primary: Color(palette.primary.get(35)),
         primaryContainer: Color(palette.primary.get(25)),
@@ -86,19 +83,49 @@ class ThemeCubitState extends Equatable {
       iconTheme: IconThemeData(
         color: Color(palette.neutral.get(80)),
       ),
+      fontFamily: 'Oswald',
       textTheme: TextTheme(
-        caption: TextStyle(
-          color: Color(palette.neutral.get(70)),
-          fontSize: 10,
+        headline5: TextStyle(
+          color: Color(palette.neutral.get(97)),
+          fontSize: 28,
           letterSpacing: 1.2,
-          fontWeight: FontWeight.w500,
+          fontWeight: FontWeight.w900,
+        ),
+        subtitle1: TextStyle(
+          color: Color(palette.tertiary.get(90)),
+          fontSize: 18,
+          letterSpacing: 1.5,
+          height: 1,
+          fontWeight: FontWeight.w600,
+        ),
+        bodyText2: TextStyle(
+          color: Color(palette.neutral.get(90)),
+          fontSize: 16,
+          letterSpacing: 1.5,
+          fontWeight: FontWeight.w600,
+        ),
+        button: TextStyle(
+          color: Color(palette.neutral.get(0)),
+          height: 1.2,
+          fontSize: 14,
         ),
       ),
       primaryTextTheme: TextTheme(
         headline6: TextStyle(
-          color: Color(palette.tertiary.get(97)),
+          color: Color(palette.neutralVariant.get(97)),
           fontWeight: FontWeight.w900,
           fontFeatures: const [FontFeature.proportionalFigures()],
+        ),
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: ButtonStyle(
+          padding: MaterialStateProperty.resolveWith(
+              (states) => const EdgeInsets.symmetric(vertical: 14, horizontal: 24)),
+          shape: MaterialStateProperty.resolveWith(
+              (states) => RoundedRectangleBorder(borderRadius: BorderRadius.circular(32))),
+          overlayColor:
+              MaterialStateProperty.resolveWith((states) => Color(palette.tertiary.get(30)).withOpacity(0.1)),
+          foregroundColor: MaterialStateProperty.resolveWith((states) => Color(palette.tertiary.get(90))),
         ),
       ),
     );

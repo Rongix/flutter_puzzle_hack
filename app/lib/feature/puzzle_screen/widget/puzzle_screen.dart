@@ -3,12 +3,12 @@ import 'dart:math';
 import 'package:app/extensions/iterable_extensions.dart';
 import 'package:app/feature/puzzle_screen/widget/puzzle_background.dart';
 import 'package:app/feature/supershape/supershape.dart';
-import 'package:app/widgets/delayed_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:sixteen_puzzle/slide_puzzle.dart';
 
+import '../../../widgets/fx/fx_on_action_scale.dart';
 import '../../supershape/animated_supershape.dart';
 
 class PuzzleScreen extends StatefulWidget {
@@ -35,13 +35,18 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
           Center(
             child: LayoutBuilder(
               builder: (_, cstr) {
-                final windowMinSize = min(cstr.maxHeight, cstr.maxWidth);
+                final windowMinSize = max(350.0, cstr.maxWidth);
                 final puzzleSize = min(400.0, windowMinSize);
+                const moves = 10;
 
                 return SingleChildScrollView(
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      const SizedBox(height: 12),
+                      Text('Puzzle Challenge', style: Theme.of(context).textTheme.headline5),
+                      Text('Naturally best puzzle', style: Theme.of(context).textTheme.subtitle1),
+                      const SizedBox(height: 16),
+                      Text('$moves/∞ moves', style: Theme.of(context).textTheme.bodyText2),
                       const SizedBox(height: 32),
                       Center(
                         child: PuzzleViewer(
@@ -50,20 +55,28 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
                           seed: widget.seed,
                         ),
                       ),
-                      const SizedBox(height: 60),
+                      const SizedBox(height: 36),
                       Row(
-                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Column(
-                            children: [
-                              GestureDetector(
-                                onTap: () => GoRouter.of(context).go('/'),
-                                child: const Icon(MdiIcons.restart),
-                              ),
-                            ],
+                          FxOnActionScale(
+                            child: OutlinedButton.icon(
+                              icon: Icon(MdiIcons.seed),
+                              label: Text('Random Seed'),
+                              onPressed: () => GoRouter.of(context).go('/'),
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          FxOnActionScale(
+                            child: OutlinedButton.icon(
+                              icon: Icon(MdiIcons.beeFlower),
+                              label: Text('Find Seed'),
+                              onPressed: () => GoRouter.of(context).go('/'),
+                            ),
                           ),
                         ],
                       ),
+                      const SizedBox(height: 8),
                     ],
                   ),
                 );
@@ -127,11 +140,15 @@ class PuzzleViewer extends StatelessWidget {
               top: i ~/ 4 * tileSize,
               child: Opacity(
                 opacity: isHackMode && e == 16 ? 0.5 : 1,
-                child: PuzzleTile(
-                  seed: seed,
-                  backgroundShape: shape,
-                  size: tileSize,
-                  value: e,
+                child: FxOnActionScale(
+                  onHoverScale: 0.9,
+                  onMouseDown: 0.85,
+                  child: PuzzleTile(
+                    seed: seed,
+                    backgroundShape: shape,
+                    size: tileSize,
+                    value: e,
+                  ),
                 ),
               ),
             );
