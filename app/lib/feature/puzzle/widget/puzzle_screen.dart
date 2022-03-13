@@ -58,14 +58,14 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
                         builder: (_, moves) =>
                             Text('$moves/∞ moves', style: Theme.of(context).textTheme.bodyText2),
                       ),
-                      const SizedBox(height: 32),
+                      const SizedBox(height: 40),
                       Center(
                         child: PuzzleViewer(
                           puzzleCubit: cubit,
                           size: 400,
                         ),
                       ),
-                      const SizedBox(height: 36),
+                      const SizedBox(height: 48),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
