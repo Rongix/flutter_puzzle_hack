@@ -17,9 +17,8 @@ class Supershape {
   }) {
     print('Supershape.fromSeed: $seed');
     final random = Random(seed.hashCode);
-    final next = random.nextInt(SupershapeConfig.seeds.length);
-    print(next);
-    final config = SupershapeConfig.seeds[next];
+    final index = random.nextInt(SupershapeConfig.seeds.length);
+    final config = SupershapeConfig.seeds[index];
     print(config.name);
     // final config = SupershapeConfig.seedVelcro;
 

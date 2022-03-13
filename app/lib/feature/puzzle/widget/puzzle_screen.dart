@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:app/app/injection.dart';
 import 'package:app/extensions/iterable_extensions.dart';
 import 'package:app/feature/core/puzzle_seed_cubit.dart';
@@ -45,12 +47,15 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
           Center(
             child: LayoutBuilder(
               builder: (_, cstr) {
+                final double windowSize = min(cstr.maxHeight, cstr.maxWidth);
+                final double maxPuzzleSize = min(400, windowSize);
+
                 return SingleChildScrollView(
                   child: Column(
                     children: [
                       const SizedBox(height: 12),
                       Text('Puzzle Challenge', style: Theme.of(context).textTheme.headline5),
-                      Text('Naturally best puzzle', style: Theme.of(context).textTheme.subtitle1),
+                      Text('Naturally wild puzzle', style: Theme.of(context).textTheme.subtitle1),
                       const SizedBox(height: 16),
                       BlocSelector<PuzzleCubit, PuzzleCubitState, int>(
                         selector: (state) => state.moves,
@@ -62,7 +67,7 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
                       Center(
                         child: PuzzleViewer(
                           puzzleCubit: cubit,
-                          size: 400,
+                          size: maxPuzzleSize,
                         ),
                       ),
                       const SizedBox(height: 48),
