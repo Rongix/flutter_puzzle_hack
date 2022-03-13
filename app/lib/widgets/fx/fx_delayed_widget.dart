@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-class DelayedWidget extends StatefulWidget {
-  const DelayedWidget({
+class FxDelayedWidget extends StatefulWidget {
+  const FxDelayedWidget({
     this.delay = const Duration(milliseconds: 300),
     this.child,
     Key? key,
@@ -13,10 +13,10 @@ class DelayedWidget extends StatefulWidget {
   final Duration delay;
 
   @override
-  _DelayedWidgetState createState() => _DelayedWidgetState();
+  _FxDelayedWidgetState createState() => _FxDelayedWidgetState();
 }
 
-class _DelayedWidgetState extends State<DelayedWidget> {
+class _FxDelayedWidgetState extends State<FxDelayedWidget> {
   late Timer _timer;
   bool _isVisible = false;
 
@@ -27,7 +27,7 @@ class _DelayedWidgetState extends State<DelayedWidget> {
   }
 
   @override
-  void didUpdateWidget(covariant DelayedWidget oldWidget) {
+  void didUpdateWidget(covariant FxDelayedWidget oldWidget) {
     if (oldWidget.child != widget.child) {
       _timer.cancel();
       setState(() => _isVisible = false);
