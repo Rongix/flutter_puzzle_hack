@@ -33,6 +33,7 @@ class ThemeCubitState extends Equatable {
 
   static ThemeData lighModeFromPalette(CorePalette palette) {
     return ThemeData(
+      fontFamily: 'Oswald',
       brightness: Brightness.light,
       scaffoldBackgroundColor: Color(palette.neutral.get(95)),
       backgroundColor: Color(palette.primary.get(97)),
@@ -41,36 +42,21 @@ class ThemeCubitState extends Equatable {
         primary: Color(palette.primary.get(60)),
         primaryContainer: Color(palette.primary.get(67)),
       ),
-      iconTheme: IconThemeData(
-        color: Color(palette.neutral.get(50)),
-      ),
       textTheme: TextTheme(
-        caption: TextStyle(
-          color: Color(palette.neutral.get(50)),
-          fontSize: 10,
-          letterSpacing: 1.2,
-          fontWeight: FontWeight.w500,
-        ),
+        headline5: headline5(Color(palette.neutral.get(30))),
+        subtitle1: subtitle1(Color(palette.tertiary.get(40))),
+        bodyText2: bodyText2(Color(palette.neutral.get(40))),
       ),
       primaryTextTheme: TextTheme(
-        headline6: TextStyle(
-          color: Color(palette.primary.get(99)),
-          shadows: [
-            Shadow(
-              offset: const Offset(2.0, 2.0),
-              blurRadius: 5.0,
-              color: Color(palette.tertiary.get(40)),
-            ),
-          ],
-          fontWeight: FontWeight.w900,
-          fontFeatures: const [FontFeature.proportionalFigures()],
-        ),
+        headline6: headline6Primary(Color(palette.primary.get(99))),
       ),
+      outlinedButtonTheme: outlinedButtonTheme(palette.tertiary, isDark: false),
     );
   }
 
   static ThemeData darkModeFromPaletter(CorePalette palette) {
     return ThemeData(
+      fontFamily: 'Oswald',
       brightness: Brightness.dark,
       scaffoldBackgroundColor: Color(palette.neutral.get(10)),
       backgroundColor: Color(palette.primary.get(03)),
@@ -83,50 +69,51 @@ class ThemeCubitState extends Equatable {
       iconTheme: IconThemeData(
         color: Color(palette.neutral.get(80)),
       ),
-      fontFamily: 'Oswald',
       textTheme: TextTheme(
-        headline5: TextStyle(
-          color: Color(palette.neutral.get(97)),
-          fontSize: 28,
-          letterSpacing: 1.2,
-          fontWeight: FontWeight.w900,
-        ),
-        subtitle1: TextStyle(
-          color: Color(palette.tertiary.get(90)),
-          fontSize: 18,
-          letterSpacing: 1.5,
-          height: 1,
-          fontWeight: FontWeight.w600,
-        ),
-        bodyText2: TextStyle(
-          color: Color(palette.neutral.get(90)),
-          fontSize: 16,
-          letterSpacing: 1.5,
-          fontWeight: FontWeight.w600,
-        ),
-        button: TextStyle(
-          color: Color(palette.neutral.get(0)),
-          height: 1.2,
-          fontSize: 14,
-        ),
+        headline5: headline5(Color(palette.neutral.get(97))),
+        subtitle1: subtitle1(Color(palette.tertiary.get(90))),
+        bodyText2: bodyText2(Color(palette.neutral.get(90))),
       ),
       primaryTextTheme: TextTheme(
-        headline6: TextStyle(
-          color: Color(palette.neutralVariant.get(97)),
-          fontWeight: FontWeight.w900,
-          fontFeatures: const [FontFeature.proportionalFigures()],
-        ),
+        headline6: headline6Primary(Color(palette.neutralVariant.get(97))),
       ),
-      outlinedButtonTheme: OutlinedButtonThemeData(
-        style: ButtonStyle(
-          padding: MaterialStateProperty.resolveWith(
-              (states) => const EdgeInsets.symmetric(vertical: 14, horizontal: 24)),
-          shape: MaterialStateProperty.resolveWith(
-              (states) => RoundedRectangleBorder(borderRadius: BorderRadius.circular(32))),
-          overlayColor:
-              MaterialStateProperty.resolveWith((states) => Color(palette.tertiary.get(30)).withOpacity(0.1)),
-          foregroundColor: MaterialStateProperty.resolveWith((states) => Color(palette.tertiary.get(90))),
-        ),
+      outlinedButtonTheme: outlinedButtonTheme(palette.tertiary, isDark: true),
+    );
+  }
+
+  static const List<FontFeature> monospaceFont = [FontFeature.proportionalFigures()];
+
+  static TextStyle headline5(Color color) =>
+      TextStyle(color: color, fontSize: 28, letterSpacing: 1.2, fontWeight: FontWeight.w900);
+
+  static TextStyle subtitle1(Color color) =>
+      TextStyle(color: color, fontSize: 18, letterSpacing: 1.5, height: 1, fontWeight: FontWeight.w600);
+
+  static TextStyle bodyText2(Color color) =>
+      TextStyle(color: color, fontSize: 16, letterSpacing: 1.5, fontWeight: FontWeight.w600);
+
+  static TextStyle button(Color color) => TextStyle(color: color, height: 1.2, fontSize: 14);
+
+  /// Primary text styles
+
+  static TextStyle headline6Primary(Color color) =>
+      TextStyle(color: color, fontWeight: FontWeight.w900, fontFeatures: monospaceFont);
+
+  /// Buttons
+
+  static OutlinedButtonThemeData outlinedButtonTheme(TonalPalette tonalPalette, {required bool isDark}) {
+    final overlay =
+        isDark ? Color(tonalPalette.get(30)).withOpacity(0.1) : Color(tonalPalette.get(80)).withOpacity(0.1);
+    final foreground = isDark ? Color(tonalPalette.get(90)) : Color(tonalPalette.get(40));
+
+    return OutlinedButtonThemeData(
+      style: ButtonStyle(
+        padding: MaterialStateProperty.resolveWith(
+            (states) => const EdgeInsets.symmetric(vertical: 14, horizontal: 24)),
+        shape: MaterialStateProperty.resolveWith(
+            (states) => RoundedRectangleBorder(borderRadius: BorderRadius.circular(32))),
+        overlayColor: MaterialStateProperty.resolveWith((states) => overlay),
+        foregroundColor: MaterialStateProperty.resolveWith((states) => foreground),
       ),
     );
   }
