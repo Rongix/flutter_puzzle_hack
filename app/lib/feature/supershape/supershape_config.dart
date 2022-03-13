@@ -400,4 +400,44 @@ class SupershapeConfig {
     anglePower: 5,
     denominatorPower: 1 / 5,
   );
+
+  // 40
+  static SupershapeConfig seedLegendaryThorn = SupershapeConfig(
+    name: 'Legendary Thorn',
+    numeratorBuilder: (angle) => 2.2 * math.pow(math.cos(angle * 2.5).abs(), 1 / 2.95).toDouble(),
+    angleMultiplier: 2.5,
+    denominatorPower: 1 / 0.4,
+  );
+
+  // 41
+  static SupershapeConfig seedGrass = SupershapeConfig(
+    name: 'Grass',
+    numeratorBuilder: (angle) => 2.3 * math.pow(math.cos(angle * 2.5).abs(), 1.2).toDouble(),
+    angleMultiplier: 2.5,
+    denominatorPower: 1 / 0.4,
+  );
+
+  // 42
+  static SupershapeConfig seedFlycatcher = SupershapeConfig(
+    name: 'Flycatcher',
+    numeratorBuilder: (angle) => 2.5 * math.pow(math.cos(angle).abs(), 0.3).toDouble(),
+    angleMultiplier: 2.5,
+    denominatorPower: 1 / 0.4,
+  );
+
+  // 40
+  static SupershapeConfig seedAloe = SupershapeConfig(
+    name: 'Aloe',
+    numeratorBuilder: (angle) => 2.2 * math.pow(math.cos(angle * 5).abs(), 1 / 2.5).toDouble(),
+    angleMultiplier: 2.5,
+    denominatorPower: 1 / 0.5,
+  );
+
+  // 40
+  static SupershapeConfig seedVelcro = SupershapeConfig(
+    name: 'Velcro',
+    numeratorBuilder: (angle) => 2.2 * math.pow(math.cos(angle * 2.5).abs(), 1 / 15).toDouble(),
+    angleMultiplier: 2.5,
+    denominatorPower: 1 / 0.4,
+  );
 }
