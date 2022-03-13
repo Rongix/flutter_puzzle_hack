@@ -6,25 +6,25 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_color_utilities/material_color_utilities.dart';
 
 /// *Singleton (registered in getIt)
-class ThemeCubit extends Cubit<ThemeCubitState> {
-  ThemeCubit() : super(ThemeCubitState.fallbackTheme());
+class ThemeCubit extends Cubit<ThemeSingletonState> {
+  ThemeCubit() : super(ThemeSingletonState.fallbackTheme());
 
   void changeTheme(String seed) {
-    emit(ThemeCubitState.fromSeed(seed));
+    emit(ThemeSingletonState.fromSeed(seed));
   }
 }
 
-class ThemeCubitState extends Equatable {
-  const ThemeCubitState(this.palette, this.lightMode, this.darkMode);
+class ThemeSingletonState extends Equatable {
+  const ThemeSingletonState(this.palette, this.lightMode, this.darkMode);
 
-  factory ThemeCubitState.fallbackTheme() => ThemeCubitState.fromSeed('ABCDEFGHIJKLMNOP');
+  factory ThemeSingletonState.fallbackTheme() => ThemeSingletonState.fromSeed('ABCDEFGHIJKLMNOP');
 
-  factory ThemeCubitState.fromSeed(String seed) {
+  factory ThemeSingletonState.fromSeed(String seed) {
     final puzzleHashCode = seed.hashCode;
     print(puzzleHashCode);
     final palette = CorePalette.of(puzzleHashCode);
 
-    return ThemeCubitState(palette, lighModeFromPalette(palette), darkModeFromPaletter(palette));
+    return ThemeSingletonState(palette, lighModeFromPalette(palette), darkModeFromPaletter(palette));
   }
 
   final CorePalette palette;

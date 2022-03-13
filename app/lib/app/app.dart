@@ -1,11 +1,11 @@
 import 'package:app/app/app_utils.dart';
-import 'package:app/feature/puzzle_screen/widget/puzzle_screen.dart';
-import 'package:app/feature/theme_cubit/theme_cubit.dart';
+import 'package:app/feature/core/theme_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:sixteen_puzzle/slide_puzzle.dart';
 
+import '../feature/core/puzzle_seed_cubit.dart';
+import '../feature/puzzle/widget/puzzle_screen.dart';
 import 'injection.dart';
 
 class App extends StatefulWidget {
@@ -26,7 +26,7 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ThemeCubit, ThemeCubitState>(
+    return BlocBuilder<ThemeCubit, ThemeSingletonState>(
       bloc: _themeCubit,
       builder: (_, state) {
         return MaterialApp.router(
@@ -44,11 +44,8 @@ class _AppState extends State<App> {
     GoRoute(
         path: '/',
         redirect: (_) {
-          const generator = SixteenPuzzleGenerator();
-          final puzzle = generator.puzzleRandom();
-          final randomSolvableSeed = generator.puzzleToSeed(puzzle);
-
-          return '/$randomSolvableSeed';
+          final puzzleSeed = getIt.get<PuzzleSeedCubit>()..randomSeed();
+          return '/${puzzleSeed.state.seed}';
         }),
     GoRoute(
         path: '/:seed',

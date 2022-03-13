@@ -9,15 +9,16 @@ class FxOnActionScale extends StatefulWidget {
     this.duration = const Duration(milliseconds: 167),
     this.onMouseDown = 0.9,
     this.onHoverScale = 0.95,
+    this.onTap,
     Key? key,
   }) : super(key: key);
 
-  final Widget? child;
   final bool isActive;
   final Duration duration;
-
   final double onHoverScale;
   final double onMouseDown;
+  final Widget? child;
+  final VoidCallback? onTap;
 
   @override
   _FxOnActionScaleState createState() => _FxOnActionScaleState();
@@ -43,6 +44,7 @@ class _FxOnActionScaleState extends State<FxOnActionScale> {
         scale: scale,
         curve: Curves.decelerate,
         child: GestureDetector(
+          onTap: widget.onTap,
           behavior: HitTestBehavior.translucent,
           onTapDown: (_) => _updateScaledDown(true),
           onTapUp: (_) => _updateScaledDown(false),
