@@ -9,10 +9,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:sixteen_puzzle/slide_puzzle.dart';
 
 import '../../../widgets/fx/fx_on_action_scale.dart';
 import '../../supershape/animated_supershape.dart';
+import '../bloc/intents.dart';
 import 'puzzle_background.dart';
 
 class PuzzleScreen extends StatefulWidget {
@@ -57,20 +57,17 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
                       Text('Puzzle Challenge', style: Theme.of(context).textTheme.headline5),
                       Text('Naturally best puzzle', style: Theme.of(context).textTheme.subtitle1),
                       const SizedBox(height: 16),
-                      BlocBuilder<PuzzleCubit, PuzzleCubitState>(
+                      BlocSelector<PuzzleCubit, PuzzleCubitState, int>(
+                        selector: (state) => state.moves,
                         bloc: cubit,
-                        builder: (_, state) =>
-                            Text('${state.moves}/∞ moves', style: Theme.of(context).textTheme.bodyText2),
+                        builder: (_, moves) =>
+                            Text('$moves/∞ moves', style: Theme.of(context).textTheme.bodyText2),
                       ),
                       const SizedBox(height: 32),
                       Center(
-                        child: BlocBuilder<PuzzleCubit, PuzzleCubitState>(
-                          bloc: cubit,
-                          builder: (_, state) => PuzzleViewer(
-                            puzzleCubit: cubit,
-                            size: puzzleSize,
-                            puzzle: state.puzzle,
-                          ),
+                        child: PuzzleViewer(
+                          puzzleCubit: cubit,
+                          size: puzzleSize,
                         ),
                       ),
                       const SizedBox(height: 36),
@@ -79,16 +76,16 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
                         children: [
                           FxOnActionScale(
                             child: OutlinedButton.icon(
-                              icon: Icon(MdiIcons.seed),
-                              label: Text('Random Seed'),
+                              icon: const Icon(MdiIcons.seed),
+                              label: const Text('Random Seed'),
                               onPressed: () => GoRouter.of(context).go('/'),
                             ),
                           ),
                           const SizedBox(width: 16),
                           FxOnActionScale(
                             child: OutlinedButton.icon(
-                              icon: Icon(MdiIcons.beeFlower),
-                              label: Text('Find Seed'),
+                              icon: const Icon(MdiIcons.beeFlower),
+                              label: const Text('Find Seed'),
                               onPressed: () => GoRouter.of(context).go('/'),
                             ),
                           ),
@@ -112,13 +109,11 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
 class PuzzleViewer extends StatelessWidget {
   PuzzleViewer({
     required this.size,
-    required this.puzzle,
     required this.puzzleCubit,
     Key? key,
   }) : super(key: key);
 
   final double size;
-  final List<int> puzzle;
   final PuzzleCubit puzzleCubit;
 
   late final Supershape supershape = Supershape.fromSeed(seed: getIt.get<PuzzleSeedCubit>().state.seed);
@@ -139,30 +134,80 @@ class PuzzleViewer extends StatelessWidget {
     return SizedBox(
       height: size,
       width: size,
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          ...puzzle.mapIndexed((e, i) {
-            if (e == 16) return const SizedBox();
-            return AnimatedPositioned(
-              key: ValueKey('PuzzleTile-$e'),
-              duration: const Duration(milliseconds: 500),
-              curve: Curves.easeInOut,
-              left: i % 4 * tileSize,
-              top: i ~/ 4 * tileSize,
-              child: FxOnActionScale(
-                onTap: () => puzzleCubit.tap(i),
-                onHoverScale: 0.9,
-                onMouseDown: 0.85,
-                child: PuzzleTile(
-                  backgroundShape: shape,
-                  size: tileSize,
-                  value: e,
-                ),
-              ),
-            );
-          }),
-        ],
+      child: FocusableActionDetector(
+        autofocus: true,
+        shortcuts: {
+          moveRightKeySet: MoveRightIntent(),
+          moveRightKeyV2Set: MoveRightIntent(),
+          moveLeftKeySet: MoveLeftIntent(),
+          moveLeftKeyV2Set: MoveLeftIntent(),
+          moveUpKeySet: MoveUpIntent(),
+          moveUpKeyV2Set: MoveUpIntent(),
+          moveDownKeySet: MoveDownIntent(),
+          moveDownKeyV2Set: MoveDownIntent(),
+          swipeRightKeySet: SwipeRightIntent(),
+          swipeRightKeyV2Set: SwipeRightIntent(),
+          swipeLeftKeySet: SwipeLeftIntent(),
+          swipeLeftKeyV2Set: SwipeLeftIntent(),
+          swipeUpKeySet: SwipeUpIntent(),
+          swipeUpKeyV2Set: SwipeUpIntent(),
+          swipeDownKeySet: SwipeDownIntent(),
+          swipeDownKeyV2Set: SwipeDownIntent(),
+        },
+        actions: {
+          MoveRightIntent: CallbackAction(
+            onInvoke: (_) => puzzleCubit.moveInDirection(SwipeDirection.right, false),
+          ),
+          MoveLeftIntent: CallbackAction(
+            onInvoke: (_) => puzzleCubit.moveInDirection(SwipeDirection.left, false),
+          ),
+          MoveUpIntent: CallbackAction(
+            onInvoke: (_) => puzzleCubit.moveInDirection(SwipeDirection.up, false),
+          ),
+          MoveDownIntent: CallbackAction(
+            onInvoke: (_) => puzzleCubit.moveInDirection(SwipeDirection.down, false),
+          ),
+          SwipeRightIntent: CallbackAction(
+            onInvoke: (_) => puzzleCubit.moveInDirection(SwipeDirection.right, true),
+          ),
+          SwipeLeftIntent: CallbackAction(
+            onInvoke: (_) => puzzleCubit.moveInDirection(SwipeDirection.left, true),
+          ),
+          SwipeUpIntent: CallbackAction(
+            onInvoke: (_) => puzzleCubit.moveInDirection(SwipeDirection.up, true),
+          ),
+          SwipeDownIntent: CallbackAction(
+            onInvoke: (_) => puzzleCubit.moveInDirection(SwipeDirection.down, true),
+          ),
+        },
+        child: BlocBuilder<PuzzleCubit, PuzzleCubitState>(
+          bloc: puzzleCubit,
+          builder: (_, state) => Stack(
+            clipBehavior: Clip.none,
+            children: [
+              ...state.puzzle.mapIndexed((e, i) {
+                if (e == 16) return const SizedBox();
+                return AnimatedPositioned(
+                  key: ValueKey('PuzzleTile-$e'),
+                  duration: const Duration(milliseconds: 500),
+                  curve: Curves.easeInOut,
+                  left: i % 4 * tileSize,
+                  top: i ~/ 4 * tileSize,
+                  child: FxOnActionScale(
+                    onTap: () => puzzleCubit.tap(i),
+                    onHoverScale: 0.9,
+                    onMouseDown: 0.85,
+                    child: PuzzleTile(
+                      backgroundShape: shape,
+                      size: tileSize,
+                      value: e,
+                    ),
+                  ),
+                );
+              }),
+            ],
+          ),
+        ),
       ),
     );
   }
