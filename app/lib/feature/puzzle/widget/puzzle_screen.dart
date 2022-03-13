@@ -106,8 +106,8 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
 
 /// PuzzleViewer manages animations and effects of the puzzle grid.
 /// IDEA: Calculate how neighbouring influence each other (scaling, sides of the puzzle shrinking etc)
-class PuzzleViewer extends StatelessWidget {
-  PuzzleViewer({
+class PuzzleViewer extends StatefulWidget {
+  const PuzzleViewer({
     required this.size,
     required this.puzzleCubit,
     Key? key,
@@ -116,9 +116,33 @@ class PuzzleViewer extends StatelessWidget {
   final double size;
   final PuzzleCubit puzzleCubit;
 
+  @override
+  State<PuzzleViewer> createState() => _PuzzleViewerState();
+}
+
+class _PuzzleViewerState extends State<PuzzleViewer> {
   late final Supershape supershape = Supershape.fromSeed(seed: getIt.get<PuzzleSeedCubit>().state.seed);
 
-  double get tileSize => size / 4;
+  late final FocusNode _focusNode;
+
+  double get tileSize => widget.size / 4;
+
+  @override
+  void initState() {
+    super.initState();
+
+    /// Not a perfect solution - after clicking a button we're regaining focus
+    _focusNode = FocusNode()
+      ..addListener(() {
+        if (!_focusNode.hasFocus) _focusNode.requestFocus();
+      });
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -132,9 +156,10 @@ class PuzzleViewer extends StatelessWidget {
     );
 
     return SizedBox(
-      height: size,
-      width: size,
+      height: widget.size,
+      width: widget.size,
       child: FocusableActionDetector(
+        focusNode: _focusNode,
         autofocus: true,
         shortcuts: {
           moveRightKeySet: MoveRightIntent(),
@@ -156,32 +181,32 @@ class PuzzleViewer extends StatelessWidget {
         },
         actions: {
           MoveRightIntent: CallbackAction(
-            onInvoke: (_) => puzzleCubit.moveInDirection(SwipeDirection.right, false),
+            onInvoke: (_) => widget.puzzleCubit.moveInDirection(SwipeDirection.right, false),
           ),
           MoveLeftIntent: CallbackAction(
-            onInvoke: (_) => puzzleCubit.moveInDirection(SwipeDirection.left, false),
+            onInvoke: (_) => widget.puzzleCubit.moveInDirection(SwipeDirection.left, false),
           ),
           MoveUpIntent: CallbackAction(
-            onInvoke: (_) => puzzleCubit.moveInDirection(SwipeDirection.up, false),
+            onInvoke: (_) => widget.puzzleCubit.moveInDirection(SwipeDirection.up, false),
           ),
           MoveDownIntent: CallbackAction(
-            onInvoke: (_) => puzzleCubit.moveInDirection(SwipeDirection.down, false),
+            onInvoke: (_) => widget.puzzleCubit.moveInDirection(SwipeDirection.down, false),
           ),
           SwipeRightIntent: CallbackAction(
-            onInvoke: (_) => puzzleCubit.moveInDirection(SwipeDirection.right, true),
+            onInvoke: (_) => widget.puzzleCubit.moveInDirection(SwipeDirection.right, true),
           ),
           SwipeLeftIntent: CallbackAction(
-            onInvoke: (_) => puzzleCubit.moveInDirection(SwipeDirection.left, true),
+            onInvoke: (_) => widget.puzzleCubit.moveInDirection(SwipeDirection.left, true),
           ),
           SwipeUpIntent: CallbackAction(
-            onInvoke: (_) => puzzleCubit.moveInDirection(SwipeDirection.up, true),
+            onInvoke: (_) => widget.puzzleCubit.moveInDirection(SwipeDirection.up, true),
           ),
           SwipeDownIntent: CallbackAction(
-            onInvoke: (_) => puzzleCubit.moveInDirection(SwipeDirection.down, true),
+            onInvoke: (_) => widget.puzzleCubit.moveInDirection(SwipeDirection.down, true),
           ),
         },
         child: BlocBuilder<PuzzleCubit, PuzzleCubitState>(
-          bloc: puzzleCubit,
+          bloc: widget.puzzleCubit,
           builder: (_, state) => Stack(
             clipBehavior: Clip.none,
             children: [
@@ -194,7 +219,7 @@ class PuzzleViewer extends StatelessWidget {
                   left: i % 4 * tileSize,
                   top: i ~/ 4 * tileSize,
                   child: FxOnActionScale(
-                    onTap: () => puzzleCubit.tap(i),
+                    onTap: () => widget.puzzleCubit.tap(i),
                     onHoverScale: 0.9,
                     onMouseDown: 0.85,
                     child: PuzzleTile(

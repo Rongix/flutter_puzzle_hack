@@ -17,6 +17,12 @@ dependencies:
   material_design_icons_flutter: ^5.0.6595
   url_launcher: ^6.0.20
   material_color_utilities: ^0.1.3
+  universal_platform: ^1.0.0
+
+  window_size:
+    git:
+      url: git://github.com/google/flutter-desktop-embedding.git
+      path: plugins/window_size
 
   sixteen_puzzle:
     path: ../sixteen_puzzle

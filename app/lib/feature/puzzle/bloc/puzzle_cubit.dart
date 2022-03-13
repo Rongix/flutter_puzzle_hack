@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 enum SwipeDirection { up, down, left, right, none }
@@ -46,7 +45,7 @@ class PuzzleCubit extends Cubit<PuzzleCubitState> {
     }
 
     var axisOffset = directionToInt(direction);
-    var max = maxMoveInDirection(direction);
+    final max = maxMoveInDirection(direction);
     //Invalid move
     if (max == 0) {
       return;
