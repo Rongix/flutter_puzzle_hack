@@ -10,7 +10,7 @@ void main() {
   setupInjection();
   Paint.enableDithering = true;
   if (UniversalPlatform.isDesktop) {
-    setWindowMinSize(const Size(350, 350));
+    setWindowMinSize(const Size(450, 450));
   }
   runApp(const App());
 }

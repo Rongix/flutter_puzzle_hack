@@ -9,26 +9,21 @@ import 'package:vector_math/vector_math.dart' as vector;
 typedef DoubleBuilder = double Function(double value);
 
 class Supershape {
-  const Supershape(this.points, this.angleOffset);
+  const Supershape(this.points, this.angleOffset, this.config);
 
   factory Supershape.fromSeed({
     required String seed,
-    double angularPrecission = 1,
+    double angularPrecission = 1.0,
   }) {
     print('Supershape.fromSeed: $seed');
     final random = Random(seed.hashCode);
     final config = SupershapeConfig.seeds[random.nextInt(SupershapeConfig.seeds.length)];
-    // final config = SupershapeConfig.seedStar7;
-    print(config.name);
 
-    return Supershape.generateShape(
-        angleOffset: random.nextDouble() + 0.5,
-        angularPrecission: angularPrecission,
-        numeratorBuilder: config.numeratorBuilder,
-        denominatorPower: config.denominatorPower,
-        angleMultiplier: config.angleMultiplier,
-        anglePower: config.anglePower);
+    return Supershape.fromConfig(
+        config: config, angularPrecission: angularPrecission, angleOffset: random.nextDouble() + 0.5);
 
+    /// Totally random shape generation. Renerated shapes are a bit too random
+    /// Left for a reference
     // return Supershape.generateShape(
     //   angleOffset: generatorRandom,
     //   angularPrecission: angularPrecission,
@@ -43,13 +38,10 @@ class Supershape {
     // );
   }
 
-  factory Supershape.generateShape({
+  factory Supershape.fromConfig({
+    required SupershapeConfig config,
     required double angleOffset,
-    required double anglePower,
-    required double denominatorPower,
-    DoubleBuilder numeratorBuilder = _oneFunc,
     double angularPrecission = 1.0,
-    double angleMultiplier = 1.0,
   }) {
     final points = <SupershapePoint>[];
 
@@ -57,19 +49,20 @@ class Supershape {
       final angle = vector.radians(i) + angleOffset;
       final sp = computePoint(
         angle: angle,
-        numerator: numeratorBuilder(angle),
-        angleMultiplier: angleMultiplier,
-        anglePower: anglePower,
-        denominatorPower: denominatorPower,
+        numerator: config.numeratorBuilder(angle),
+        angleMultiplier: config.angleMultiplier,
+        anglePower: config.anglePower,
+        denominatorPower: config.denominatorPower,
       );
       points.add(sp);
     }
 
-    return Supershape(points, angleOffset);
+    return Supershape(points, angleOffset, config);
   }
 
   final List<SupershapePoint> points;
   final double angleOffset;
+  final SupershapeConfig config;
 
   Path path(double radius) {
     final path = Path()..moveToOffset(points.first.toPoint(radius, angleOffset));
@@ -84,8 +77,6 @@ class Supershape {
     return path;
   }
 
-  static double _oneFunc(double x) => 1.0;
-
   static Supershape? lerp(Supershape? a, Supershape? b, double t) {
     if (a == null && b == null) return null;
     if (a == null) return b!;
@@ -98,7 +89,7 @@ class Supershape {
       points.add(position);
     }
 
-    return Supershape(points, lerpDouble(a.angleOffset, b.angleOffset, t));
+    return Supershape(points, lerpDouble(a.angleOffset, b.angleOffset, t), b.config);
   }
 
   static SupershapePoint computePoint({

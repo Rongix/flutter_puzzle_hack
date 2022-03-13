@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:app/app/injection.dart';
 import 'package:app/extensions/iterable_extensions.dart';
 import 'package:app/feature/core/puzzle_seed_cubit.dart';
@@ -47,9 +45,6 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
           Center(
             child: LayoutBuilder(
               builder: (_, cstr) {
-                final windowMinSize = max(350.0, cstr.maxWidth);
-                final puzzleSize = min(400.0, windowMinSize);
-
                 return SingleChildScrollView(
                   child: Column(
                     children: [
@@ -67,7 +62,7 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
                       Center(
                         child: PuzzleViewer(
                           puzzleCubit: cubit,
-                          size: puzzleSize,
+                          size: 400,
                         ),
                       ),
                       const SizedBox(height: 36),
@@ -121,8 +116,7 @@ class PuzzleViewer extends StatefulWidget {
 }
 
 class _PuzzleViewerState extends State<PuzzleViewer> {
-  late final Supershape supershape = Supershape.fromSeed(seed: getIt.get<PuzzleSeedCubit>().state.seed);
-
+  final PuzzleSeedCubit _puzzleSeedCubit = getIt.get();
   late final FocusNode _focusNode;
 
   double get tileSize => widget.size / 4;
@@ -146,15 +140,6 @@ class _PuzzleViewerState extends State<PuzzleViewer> {
 
   @override
   Widget build(BuildContext context) {
-    final shape = AnimatedSupershape(
-      key: const ValueKey('bg-shape'),
-      duration: const Duration(milliseconds: 1500),
-      supershape: supershape,
-      color1: Theme.of(context).colorScheme.primary,
-      color2: Theme.of(context).colorScheme.primaryContainer,
-      size: Size(tileSize, tileSize),
-    );
-
     return SizedBox(
       height: widget.size,
       width: widget.size,
@@ -222,10 +207,14 @@ class _PuzzleViewerState extends State<PuzzleViewer> {
                     onTap: () => widget.puzzleCubit.tap(i),
                     onHoverScale: 0.9,
                     onMouseDown: 0.85,
-                    child: PuzzleTile(
-                      backgroundShape: shape,
-                      size: tileSize,
-                      value: e,
+                    child: BlocSelector<PuzzleSeedCubit, PuzzleSeedState, Supershape>(
+                      bloc: _puzzleSeedCubit,
+                      selector: (state) => state.supershape,
+                      builder: (_, supershape) => PuzzleTile(
+                        backgroundShape: backgroundShape(supershape),
+                        size: tileSize,
+                        value: e,
+                      ),
                     ),
                   ),
                 );
@@ -236,6 +225,15 @@ class _PuzzleViewerState extends State<PuzzleViewer> {
       ),
     );
   }
+
+  Widget backgroundShape(Supershape supershape) => AnimatedSupershape(
+        key: const ValueKey('bg-shape'),
+        duration: const Duration(milliseconds: 1500),
+        supershape: supershape,
+        color1: Theme.of(context).colorScheme.primary,
+        color2: Theme.of(context).colorScheme.primaryContainer,
+        size: Size(tileSize, tileSize),
+      );
 }
 
 class PuzzleTile extends StatelessWidget {

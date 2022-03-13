@@ -3,6 +3,8 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sixteen_puzzle/slide_puzzle.dart';
 
+import '../supershape/supershape.dart';
+
 class PuzzleSeedException extends AppException {
   PuzzleSeedException._(String message) : super(message);
 
@@ -10,22 +12,37 @@ class PuzzleSeedException extends AppException {
 }
 
 /// *Singleton (registered in getIt)
+/// Puzzle Seed controlls current seed in literal form -> String
+/// and generated List<int>.
+/// In addition seed directly controls generated shapes in the puzzle
 class PuzzleSeedCubit extends Cubit<PuzzleSeedState> {
-  PuzzleSeedCubit(this.generator)
-      : super(PuzzleSeedState(seed: solvedSeed, puzzle: solvedPuzzle, isSolvable: true));
+  PuzzleSeedCubit(this.generator) : super(solvedState);
 
   final SixteenPuzzleGenerator generator;
 
   static const String solvedSeed = 'ABCDEFGHIJKLMNOP';
   static List<int> get solvedPuzzle => List<int>.generate(17, (i) => i + 1);
 
-  void randomSeed() {
-    final solvablePuzzle = generator.puzzleRandom();
-    final solvableSeed = generator.puzzleToSeed(solvablePuzzle);
+  static PuzzleSeedState get solvedState => PuzzleSeedState(
+        seed: solvedSeed,
+        puzzle: solvedPuzzle,
+        isSolvable: true,
+        supershape: Supershape.fromSeed(seed: solvedSeed),
+      );
 
-    return emit(PuzzleSeedState(seed: solvableSeed, puzzle: solvablePuzzle, isSolvable: true));
+  /// Generate random but solvable seed
+  void randomSeed() {
+    final puzzle = generator.puzzleRandom();
+    final puzzleSeed = generator.puzzleToSeed(puzzle);
+
+    return emit(PuzzleSeedState(
+        seed: puzzleSeed,
+        puzzle: puzzle,
+        isSolvable: true,
+        supershape: Supershape.fromSeed(seed: puzzleSeed)));
   }
 
+  /// Provided seed by e.g: browser can be faulty / unsolvable. Return solved puzzle in this case.
   void fromSeed(String seed) {
     try {
       final puzzle = generator.puzzleFromSeed(seed);
@@ -33,13 +50,15 @@ class PuzzleSeedCubit extends Cubit<PuzzleSeedState> {
         seed: seed,
         puzzle: puzzle,
         isSolvable: generator.validate(puzzle),
+        supershape: Supershape.fromSeed(seed: seed),
       ));
     } on PuzzleException {
       return emit(PuzzleSeedState(
         seed: seed,
-        puzzle: const [],
-        isSolvable: false,
         appException: PuzzleSeedException.invalidSeed(),
+        puzzle: solvedPuzzle,
+        supershape: Supershape.fromSeed(seed: solvedSeed),
+        isSolvable: true,
       ));
     }
   }
@@ -50,11 +69,13 @@ class PuzzleSeedState extends Equatable {
     required this.seed,
     required this.puzzle,
     required this.isSolvable,
+    required this.supershape,
     this.appException,
   });
 
   final String seed;
   final List<int> puzzle;
+  final Supershape supershape;
   final bool isSolvable;
   final AppException? appException;
 

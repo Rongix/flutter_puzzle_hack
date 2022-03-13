@@ -11,11 +11,9 @@ class SupershapeConfig {
     this.anglePower = 1,
     this.angleMultiplier = 1,
     this.numeratorBuilder = _doubleBuilderDefault,
-    this.angleOffset = 0,
   });
 
   final String name;
-  final double angleOffset;
   final DoubleBuilder numeratorBuilder;
   final double denominatorPower;
   final double angleMultiplier;
