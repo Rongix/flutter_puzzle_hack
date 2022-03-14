@@ -33,6 +33,12 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
   late PuzzleCubit cubit;
 
   @override
+  void initState() {
+    super.initState();
+    cubit = PuzzleCubit(getIt.get<PuzzleSeedCubit>().state.puzzle);
+  }
+
+  @override
   void didUpdateWidget(covariant PuzzleScreen oldWidget) {
     cubit = PuzzleCubit(getIt.get<PuzzleSeedCubit>().state.puzzle);
     super.didUpdateWidget(oldWidget);
@@ -220,8 +226,8 @@ class _PuzzleViewerState extends State<PuzzleViewer> {
                 if (e == 16) return const SizedBox();
                 return AnimatedPositioned(
                   key: ValueKey('PuzzleTile-$e'),
-                  duration: const Duration(milliseconds: 500),
-                  curve: Curves.easeInOut,
+                  duration: const Duration(milliseconds: 250),
+                  curve: Curves.easeInQuad,
                   left: i % 4 * tileSize,
                   top: i ~/ 4 * tileSize,
                   child: RepaintBoundary(

@@ -17,11 +17,14 @@ class Supershape {
     final random = Random(seed.hashCode);
     final index = random.nextInt(SupershapeConfig.seeds.length);
     final config = SupershapeConfig.seeds[index];
-    print(config.name);
+    // print(config.name);
     // final config = SupershapeConfig.seedVelcro;
 
     return Supershape.fromConfig(
-        config: config, angularPrecission: angularPrecission, angleOffset: random.nextDouble() + 0.5);
+      config: config,
+      angularPrecission: angularPrecission,
+      angleOffset: random.nextDouble() + 0.5,
+    );
 
     /// Totally random shape generation. Renerated shapes are a bit too random
     /// Left for a reference
@@ -66,7 +69,8 @@ class Supershape {
   final SupershapeConfig config;
 
   Path path(double radius) {
-    final path = Path()..moveToOffset(points.first.toPoint(radius, angleOffset));
+    final path = Path()
+      ..moveToOffset(points.first.toPoint(radius, angleOffset));
     final angularPrecission = 360 / points.length;
     for (var i = 1; i < points.length; i++) {
       path.lineToOffset(points[i].toPoint(
@@ -90,7 +94,8 @@ class Supershape {
       points.add(position);
     }
 
-    return Supershape(points, lerpDouble(a.angleOffset, b.angleOffset, t), b.config);
+    return Supershape(
+        points, lerpDouble(a.angleOffset, b.angleOffset, t), b.config);
   }
 
   static SupershapePoint computePoint({
@@ -124,7 +129,8 @@ class SupershapePoint {
     return Offset(px, py);
   }
 
-  static SupershapePoint? lerp(SupershapePoint? a, SupershapePoint? b, double t) {
+  static SupershapePoint? lerp(
+      SupershapePoint? a, SupershapePoint? b, double t) {
     if (a == null && b == null) return null;
     if (a == null) return b!;
     if (b == null) return a;
