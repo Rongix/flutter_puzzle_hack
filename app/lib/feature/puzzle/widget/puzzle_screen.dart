@@ -51,7 +51,7 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
       body: FocusScope(
         child: Stack(
           children: [
-            const PuzzleBackground(),
+            // const PuzzleBackground(),
             LayoutBuilder(
               builder: (_, cstr) {
                 final double maxPuzzleSize = min(400, cstr.maxWidth);
@@ -106,7 +106,7 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
                               size: maxPuzzleSize,
                             ),
                           ),
-                          const SizedBox(height: 40),
+                          const SizedBox(height: 64),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -120,14 +120,14 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
                               const SizedBox(width: 16),
                               FxOnActionScale(
                                 child: OutlinedButton.icon(
-                                  icon: const Icon(MdiIcons.beeFlower),
-                                  label: const Text('Find Seed'),
-                                  onPressed: () => GoRouter.of(context).go('/r/puzzle'),
+                                  icon: const Icon(MdiIcons.tree),
+                                  label: const Text('Root'),
+                                  onPressed: () => GoRouter.of(context).go('/'),
                                 ),
                               ),
                             ],
                           ),
-                          const SizedBox(height: 32),
+                          const SizedBox(height: 64),
                         ],
                       ),
                     )
@@ -227,7 +227,7 @@ class _PuzzleViewerState extends State<PuzzleViewer> {
                   duration: state.isFreshPuzzle
                       ? const Duration(milliseconds: 450)
                       : const Duration(milliseconds: 250),
-                  curve: Curves.easeInQuad,
+                  curve: state.isFreshPuzzle ? Curves.easeInOut : Curves.easeInQuad,
                   left: i % 4 * tileSize,
                   top: i ~/ 4 * tileSize,
                   child: RepaintBoundary(

@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:app/feature/puzzle/widget/puzzle_background.dart';
 import 'package:app/feature/supershape/supershape_painter.dart';
 import 'package:app/widgets/fx/fx_on_action_scale.dart';
 import 'package:app/widgets/layout/autolayout.dart';
@@ -18,6 +19,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
+          // const PuzzleBackground(),
           LayoutBuilder(
             builder: (_, cstr) {
               return ListView(
@@ -39,27 +41,10 @@ class HomeScreen extends StatelessWidget {
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 60),
-                        FxOnActionScale(
-                          onTap: () => GoRouter.of(context).go('/r/puzzle'),
-                          child: Transform.rotate(
-                            angle: pi,
-                            child: CustomPaint(
-                              size: Size(150, 150),
-                              painter: SupershapePainter(
-                                supershape: Supershape.fromConfig(
-                                  angleOffset: 0,
-                                  config: SupershapeConfig.seedDorotis,
-                                ),
-                                color1: Theme.of(context).primaryColor,
-                                color2: Theme.of(context).backgroundColor,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 60),
-                        PuzzleControlsInstruction(),
-                        const SizedBox(height: 60),
-                        const SizedBox(height: 32),
+                        const HomeScreenPlayButton(),
+                        const SizedBox(height: 64),
+                        const PuzzleControlsInstruction(),
+                        const SizedBox(height: 88),
                       ],
                     ),
                   )
@@ -69,6 +54,52 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class HomeScreenPlayButton extends StatelessWidget {
+  const HomeScreenPlayButton({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        SizedBox(
+          width: 150,
+          height: 150,
+          child: Transform.scale(
+            scale: 1.2,
+            child: Card(
+              elevation: 0,
+              color: Colors.transparent,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(100),
+                  side: BorderSide(
+                    color: Theme.of(context).colorScheme.primary.withOpacity(0.4),
+                    width: 2,
+                  )),
+            ),
+          ),
+        ),
+        FxOnActionScale(
+          onTap: () => GoRouter.of(context).go('/r/puzzle'),
+          child: Transform.rotate(
+            angle: pi,
+            child: CustomPaint(
+              size: const Size(150, 150),
+              painter: SupershapePainter(
+                supershape: Supershape.fromConfig(
+                  angleOffset: 0,
+                  config: SupershapeConfig.seedDorotis,
+                ),
+                color1: Theme.of(context).primaryColor,
+                color2: Theme.of(context).backgroundColor,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
