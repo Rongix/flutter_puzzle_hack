@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:app/app/app_utils.dart';
 import 'package:app/feature/core/theme_cubit.dart';
 import 'package:flutter/material.dart';
@@ -43,10 +44,19 @@ class _AppState extends State<App> {
   }
 
   final router = GoRouter(
-      errorBuilder: (context, state) {
+      errorPageBuilder: (context, state) {
         appSetSwitcherDescription(name: '15 Puzzle 404');
 
-        return const UnknownScreen();
+        return CustomTransitionPage(
+          child: const UnknownScreen(),
+          transitionsBuilder: (_, a1, a2, child) {
+            return FadeScaleTransition(
+              key: const ValueKey('screen-UNKNOWN'),
+              animation: a1,
+              child: child,
+            );
+          },
+        );
       },
       routes: [
         GoRoute(
@@ -58,13 +68,22 @@ class _AppState extends State<App> {
         ),
         GoRoute(
           path: '/',
-          builder: (_, state) {
-            return const HomeScreen();
+          pageBuilder: (_, state) {
+            return CustomTransitionPage(
+              child: const HomeScreen(),
+              transitionsBuilder: (_, a1, a2, child) {
+                return FadeScaleTransition(
+                  key: const ValueKey('screen-HOME'),
+                  animation: a1,
+                  child: child,
+                );
+              },
+            );
           },
         ),
         GoRoute(
             path: '/:seed',
-            builder: (_, state) {
+            pageBuilder: (_, state) {
               final seed = state.params['seed'] ?? '';
               const name = '15 Puzzle';
               final seedCubit = getIt.get<PuzzleSeedCubit>()..fromSeed(seed);
@@ -73,9 +92,22 @@ class _AppState extends State<App> {
 
               if (seedCubit.state.appException == null) {
                 getIt.get<ThemeCubit>().changeTheme(seed);
-                return PuzzleScreen(seed: seed);
+                return CustomTransitionPage(
+                  key: const ValueKey('screen-PUZZLE'),
+                  child: PuzzleScreen(seed: seed),
+                  transitionsBuilder: (_, a1, a2, child) {
+                    return FadeScaleTransition(animation: a1, child: child);
+                  },
+                );
               }
-              return const UnknownScreen();
+
+              return CustomTransitionPage(
+                key: const ValueKey('screen-UNKNOWN'),
+                child: const UnknownScreen(),
+                transitionsBuilder: (_, a1, a2, child) {
+                  return FadeScaleTransition(animation: a1, child: child);
+                },
+              );
             }),
       ]);
 }
