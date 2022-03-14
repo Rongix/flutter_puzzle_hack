@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:app/app/injection.dart';
 import 'package:app/extensions/iterable_extensions.dart';
 import 'package:app/feature/core/puzzle_seed_cubit.dart';
+import 'package:app/feature/core/theme_cubit.dart';
 import 'package:app/feature/puzzle/bloc/puzzle_cubit.dart';
 import 'package:app/feature/supershape/supershape.dart';
 import 'package:flutter/material.dart';
@@ -72,14 +73,19 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
                             bloc: cubit,
                             selector: (state) => state.isCompleted,
                             builder: (context, isCompleted) =>
-                                BlocSelector<PuzzleSeedCubit, PuzzleSeedState, String>(
-                              bloc: getIt.get<PuzzleSeedCubit>(),
-                              selector: (state) => state.supershape.config.name,
-                              builder: (_, name) => Text(
-                                isCompleted ? name : 'Naturally wild puzzle',
-                                key: ValueKey(name),
-                                style: Theme.of(context).textTheme.subtitle1,
-                                textAlign: TextAlign.center,
+                              BlocSelector<ThemeCubit, ThemeSingletonState, String>(
+                                bloc: getIt.get<ThemeCubit>(),
+                                selector: (state) => state.name,
+                                builder: (context, colorName) =>
+                                  BlocSelector<PuzzleSeedCubit, PuzzleSeedState, String>(
+                                bloc: getIt.get<PuzzleSeedCubit>(),
+                                selector: (state) => state.supershape.config.name,
+                                builder: (_, name) => Text(
+                                  isCompleted ? '$colorName $name' : 'Naturally wild puzzle',
+                                  key: ValueKey(name),
+                                  style: Theme.of(context).textTheme.subtitle1,
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
                             ),
                           ),

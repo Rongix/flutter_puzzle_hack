@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:app/feature/colorClasifier/colorClasifier.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,7 +16,8 @@ class ThemeCubit extends Cubit<ThemeSingletonState> {
 }
 
 class ThemeSingletonState extends Equatable {
-  const ThemeSingletonState(this.palette, this.lightMode, this.darkMode);
+  const ThemeSingletonState(
+      this.palette, this.lightMode, this.darkMode, this.name);
 
   factory ThemeSingletonState.fallbackTheme() => ThemeSingletonState.fromSeed('ABCDEFGHIJKLMNPO');
 
@@ -24,9 +26,14 @@ class ThemeSingletonState extends Equatable {
     print(puzzleHashCode);
     final palette = CorePalette.of(puzzleHashCode);
 
-    return ThemeSingletonState(palette, lighModeFromPalette(palette), darkModeFromPaletter(palette));
+    final colorDefnition = ColorClasifier(ColorDefinition.clasifiedColors)
+        .classifyColor(Color(palette.primary.get(50)));
+
+    return ThemeSingletonState(palette, lighModeFromPalette(palette),
+        darkModeFromPaletter(palette), colorDefnition.name);
   }
 
+  final String name;
   final CorePalette palette;
   final ThemeData lightMode;
   final ThemeData darkMode;
