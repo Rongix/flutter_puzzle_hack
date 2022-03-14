@@ -37,12 +37,15 @@ class ThemeSingletonState extends Equatable {
       brightness: Brightness.light,
       primaryColor: Color(palette.primary.get(50)),
       scaffoldBackgroundColor: Color(palette.neutral.get(95)),
-      backgroundColor: Color(palette.primary.get(97)),
+      backgroundColor: Color(palette.primary.get(98)),
       shadowColor: Color(palette.neutral.get(10)),
       cardColor: Color(palette.neutralVariant.get(95)),
       colorScheme: ColorScheme.light(
         primary: Color(palette.primary.get(60)),
         primaryContainer: Color(palette.primary.get(67)),
+      ),
+      iconTheme: IconThemeData(
+        color: Color(palette.tertiary.get(40)),
       ),
       textTheme: TextTheme(
         headline5: headline5(Color(palette.neutral.get(30))),
@@ -63,7 +66,7 @@ class ThemeSingletonState extends Equatable {
       brightness: Brightness.dark,
       primaryColor: Color(palette.primary.get(50)),
       scaffoldBackgroundColor: Color(palette.neutral.get(10)),
-      backgroundColor: Color(palette.primary.get(03)),
+      backgroundColor: Color(palette.neutralVariant.get(05)),
       cardColor: Color(palette.neutral.get(05)),
       colorScheme: ColorScheme.dark(
         primary: Color(palette.primary.get(35)),
@@ -72,7 +75,7 @@ class ThemeSingletonState extends Equatable {
         tertiaryContainer: Color(palette.tertiary.get(30)),
       ),
       iconTheme: IconThemeData(
-        color: Color(palette.neutral.get(80)),
+        color: Color(palette.tertiary.get(90)),
       ),
       textTheme: TextTheme(
         headline5: headline5(Color(palette.neutral.get(97))),
