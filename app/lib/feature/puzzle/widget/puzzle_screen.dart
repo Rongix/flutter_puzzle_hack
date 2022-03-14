@@ -55,7 +55,17 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
                     children: [
                       const SizedBox(height: 12),
                       Text('Puzzle Challenge', style: Theme.of(context).textTheme.headline5),
-                      Text('Naturally wild puzzle', style: Theme.of(context).textTheme.subtitle1),
+                      BlocSelector<PuzzleCubit, PuzzleCubitState, bool>(
+                        bloc: cubit,
+                        selector: (state) => state.isCompleted,
+                        builder: (context, isCompleted) =>
+                            BlocSelector<PuzzleSeedCubit, PuzzleSeedState, String>(
+                          bloc: getIt.get<PuzzleSeedCubit>(),
+                          selector: (state) => state.supershape.config.name,
+                          builder: (_, name) => Text(isCompleted ? '$name' : 'Naturally wild puzzle',
+                              key: ValueKey(name), style: Theme.of(context).textTheme.subtitle1),
+                        ),
+                      ),
                       const SizedBox(height: 16),
                       BlocSelector<PuzzleCubit, PuzzleCubitState, int>(
                         selector: (state) => state.moves,
@@ -218,7 +228,7 @@ class _PuzzleViewerState extends State<PuzzleViewer> {
                       builder: (_, supershape) => PuzzleTile(
                         backgroundShape: backgroundShape(supershape),
                         size: tileSize,
-                        value: e,
+                        value: state.isCompleted ? '^__^' : e.toString(),
                       ),
                     ),
                   ),
@@ -251,7 +261,7 @@ class PuzzleTile extends StatelessWidget {
 
   /// max height and width of a puzzle tile
   final double size;
-  final int value;
+  final String value;
   final Widget backgroundShape;
 
   @override
@@ -268,10 +278,7 @@ class PuzzleTile extends StatelessWidget {
               width: size,
               alignment: Alignment.center,
               constraints: const BoxConstraints.expand(),
-              child: Text(
-                value.toString(),
-                style: Theme.of(context).primaryTextTheme.headline6,
-              ),
+              child: Text(value, style: Theme.of(context).primaryTextTheme.headline6),
             ),
           ],
         ),

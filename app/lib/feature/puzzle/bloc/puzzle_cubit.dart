@@ -6,7 +6,8 @@ enum SwipeDirection { up, down, left, right, none }
 enum PuzzleCompletion { incomplete, complete, unsolvable }
 
 class PuzzleCubit extends Cubit<PuzzleCubitState> {
-  PuzzleCubit(List<int> puzzle) : super(PuzzleCubitState.init(puzzle));
+  PuzzleCubit(List<int> puzzle)
+      : super(PuzzleCubitState.init([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 15]));
 
   int get blankIndex => state.puzzle.indexOf(16);
 
@@ -119,7 +120,7 @@ class PuzzleCubit extends Cubit<PuzzleCubitState> {
 }
 
 class PuzzleCubitState extends Equatable {
-  const PuzzleCubitState({
+  PuzzleCubitState({
     this.puzzle = const [],
     this.swipeDirection = SwipeDirection.none,
     this.moves = 0,
@@ -132,6 +133,13 @@ class PuzzleCubitState extends Equatable {
   final SwipeDirection swipeDirection;
   final int moves;
   final List<int> puzzle;
+
+  late final bool isCompleted = _computeIsCompleted();
+
+  bool _computeIsCompleted() {
+    for (var i = 0; i < puzzle.length; i++) if (puzzle[i] != i + 1) return false;
+    return true;
+  }
 
   @override
   List<Object?> get props => [swipeDirection, moves, puzzle];
