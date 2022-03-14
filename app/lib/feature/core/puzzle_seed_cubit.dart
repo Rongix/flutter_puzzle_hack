@@ -44,6 +44,8 @@ class PuzzleSeedCubit extends Cubit<PuzzleSeedState> {
 
   /// Provided seed by e.g: browser can be faulty / unsolvable. Return solved puzzle in this case.
   void fromSeed(String seed) {
+    if (seed == state.seed) return;
+
     try {
       final puzzle = generator.puzzleFromSeed(seed);
       return emit(PuzzleSeedState(
@@ -56,8 +58,8 @@ class PuzzleSeedCubit extends Cubit<PuzzleSeedState> {
       return emit(PuzzleSeedState(
         seed: seed,
         appException: PuzzleSeedException.invalidSeed(),
-        puzzle: solvedPuzzle,
-        supershape: Supershape.fromSeed(seed: solvedSeed),
+        puzzle: state.puzzle,
+        supershape: state.supershape,
         isSolvable: true,
       ));
     }

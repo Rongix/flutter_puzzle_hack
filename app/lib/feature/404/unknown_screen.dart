@@ -26,7 +26,7 @@ class UnknownScreen extends StatelessWidget {
                     child: OutlinedButton.icon(
                       icon: const Icon(MdiIcons.seed),
                       label: const Text('Generate new random puzzle!'),
-                      onPressed: () => GoRouter.of(context).go('/'),
+                      onPressed: () => GoRouter.of(context).go('/r/puzzle'),
                     ),
                   ),
                   const Spacer(flex: 2),

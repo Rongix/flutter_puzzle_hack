@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import '../feature/404/unknown_screen.dart';
 import '../feature/core/puzzle_seed_cubit.dart';
+import '../feature/home/home_screen.dart';
 import '../feature/puzzle/widget/puzzle_screen.dart';
 import 'injection.dart';
 
@@ -49,21 +50,32 @@ class _AppState extends State<App> {
       },
       routes: [
         GoRoute(
-            path: '/',
-            redirect: (_) {
-              final puzzleSeed = getIt.get<PuzzleSeedCubit>()..randomSeed();
-              return '/${puzzleSeed.state.seed}';
-            }),
+          path: '/r/puzzle',
+          redirect: (_) {
+            final seedCubit = getIt.get<PuzzleSeedCubit>()..randomSeed();
+            return '/${seedCubit.state.seed}';
+          },
+        ),
+        GoRoute(
+          path: '/',
+          builder: (_, state) {
+            return const HomeScreen();
+          },
+        ),
         GoRoute(
             path: '/:seed',
             builder: (_, state) {
               final seed = state.params['seed'] ?? '';
               const name = '15 Puzzle';
-              getIt.get<ThemeCubit>().changeTheme(seed);
-              getIt.get<PuzzleSeedCubit>().fromSeed(seed);
+              final seedCubit = getIt.get<PuzzleSeedCubit>()..fromSeed(seed);
 
               appSetSwitcherDescription(name: name);
-              return PuzzleScreen(seed: seed);
-            })
+
+              if (seedCubit.state.appException == null) {
+                getIt.get<ThemeCubit>().changeTheme(seed);
+                return PuzzleScreen(seed: seed);
+              }
+              return const UnknownScreen();
+            }),
       ]);
 }

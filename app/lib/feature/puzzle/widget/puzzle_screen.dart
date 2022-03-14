@@ -54,7 +54,7 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
             LayoutBuilder(
               builder: (_, cstr) {
                 final double maxPuzzleSize = min(400, cstr.maxWidth);
-      
+
                 return ListView(
                   children: [
                     Container(
@@ -71,8 +71,8 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
                           BlocSelector<PuzzleCubit, PuzzleCubitState, bool>(
                             bloc: cubit,
                             selector: (state) => state.isCompleted,
-                            builder: (context, isCompleted) => BlocSelector<
-                                PuzzleSeedCubit, PuzzleSeedState, String>(
+                            builder: (context, isCompleted) =>
+                                BlocSelector<PuzzleSeedCubit, PuzzleSeedState, String>(
                               bloc: getIt.get<PuzzleSeedCubit>(),
                               selector: (state) => state.supershape.config.name,
                               builder: (_, name) => Text(
@@ -108,7 +108,7 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
                                 child: OutlinedButton.icon(
                                   icon: const Icon(MdiIcons.seed),
                                   label: const Text('Random Seed'),
-                                  onPressed: () => GoRouter.of(context).go('/'),
+                                  onPressed: () => GoRouter.of(context).go('/r/puzzle'),
                                 ),
                               ),
                               const SizedBox(width: 16),
@@ -116,7 +116,7 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
                                 child: OutlinedButton.icon(
                                   icon: const Icon(MdiIcons.beeFlower),
                                   label: const Text('Find Seed'),
-                                  onPressed: () => GoRouter.of(context).go('/'),
+                                  onPressed: () => GoRouter.of(context).go('/r/puzzle'),
                                 ),
                               ),
                             ],
@@ -185,36 +185,28 @@ class _PuzzleViewerState extends State<PuzzleViewer> {
         },
         actions: {
           MoveRightIntent: CallbackAction(
-            onInvoke: (_) =>
-                widget.puzzleCubit.moveInDirection(SwipeDirection.right, false),
+            onInvoke: (_) => widget.puzzleCubit.moveInDirection(SwipeDirection.right, false),
           ),
           MoveLeftIntent: CallbackAction(
-            onInvoke: (_) =>
-                widget.puzzleCubit.moveInDirection(SwipeDirection.left, false),
+            onInvoke: (_) => widget.puzzleCubit.moveInDirection(SwipeDirection.left, false),
           ),
           MoveUpIntent: CallbackAction(
-            onInvoke: (_) =>
-                widget.puzzleCubit.moveInDirection(SwipeDirection.up, false),
+            onInvoke: (_) => widget.puzzleCubit.moveInDirection(SwipeDirection.up, false),
           ),
           MoveDownIntent: CallbackAction(
-            onInvoke: (_) =>
-                widget.puzzleCubit.moveInDirection(SwipeDirection.down, false),
+            onInvoke: (_) => widget.puzzleCubit.moveInDirection(SwipeDirection.down, false),
           ),
           SwipeRightIntent: CallbackAction(
-            onInvoke: (_) =>
-                widget.puzzleCubit.moveInDirection(SwipeDirection.right, true),
+            onInvoke: (_) => widget.puzzleCubit.moveInDirection(SwipeDirection.right, true),
           ),
           SwipeLeftIntent: CallbackAction(
-            onInvoke: (_) =>
-                widget.puzzleCubit.moveInDirection(SwipeDirection.left, true),
+            onInvoke: (_) => widget.puzzleCubit.moveInDirection(SwipeDirection.left, true),
           ),
           SwipeUpIntent: CallbackAction(
-            onInvoke: (_) =>
-                widget.puzzleCubit.moveInDirection(SwipeDirection.up, true),
+            onInvoke: (_) => widget.puzzleCubit.moveInDirection(SwipeDirection.up, true),
           ),
           SwipeDownIntent: CallbackAction(
-            onInvoke: (_) =>
-                widget.puzzleCubit.moveInDirection(SwipeDirection.down, true),
+            onInvoke: (_) => widget.puzzleCubit.moveInDirection(SwipeDirection.down, true),
           ),
         },
         child: BlocBuilder<PuzzleCubit, PuzzleCubitState>(
@@ -226,7 +218,9 @@ class _PuzzleViewerState extends State<PuzzleViewer> {
                 if (e == 16) return const SizedBox();
                 return AnimatedPositioned(
                   key: ValueKey('PuzzleTile-$e'),
-                  duration: const Duration(milliseconds: 250),
+                  duration: state.isFreshPuzzle
+                      ? const Duration(milliseconds: 450)
+                      : const Duration(milliseconds: 250),
                   curve: Curves.easeInQuad,
                   left: i % 4 * tileSize,
                   top: i ~/ 4 * tileSize,
@@ -235,8 +229,7 @@ class _PuzzleViewerState extends State<PuzzleViewer> {
                       onTap: () => widget.puzzleCubit.tap(i),
                       onHoverScale: 0.9,
                       onMouseDown: 0.85,
-                      child: BlocSelector<PuzzleSeedCubit, PuzzleSeedState,
-                          Supershape>(
+                      child: BlocSelector<PuzzleSeedCubit, PuzzleSeedState, Supershape>(
                         bloc: _puzzleSeedCubit,
                         selector: (state) => state.supershape,
                         builder: (_, supershape) => PuzzleTile(
@@ -293,8 +286,7 @@ class PuzzleTile extends StatelessWidget {
               width: size,
               alignment: Alignment.center,
               constraints: const BoxConstraints.expand(),
-              child: Text(value,
-                  style: Theme.of(context).primaryTextTheme.headline6),
+              child: Text(value, style: Theme.of(context).primaryTextTheme.headline6),
             ),
           ],
         ),

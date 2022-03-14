@@ -134,7 +134,9 @@ class PuzzleCubitState extends Equatable {
   final List<int> puzzle;
 
   late final bool isCompleted = _computeIsCompleted();
+  late final bool isFreshPuzzle = _computeIsFreshPuzzle();
 
+  bool _computeIsFreshPuzzle() => moves == 0;
   bool _computeIsCompleted() {
     for (var i = 0; i < puzzle.length; i++) if (puzzle[i] != i + 1) return false;
     return true;
