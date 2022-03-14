@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../feature/404/unknown_screen.dart';
 import '../feature/core/puzzle_seed_cubit.dart';
 import '../feature/puzzle/widget/puzzle_screen.dart';
 import 'injection.dart';
@@ -40,28 +41,29 @@ class _AppState extends State<App> {
     );
   }
 
-  final router = GoRouter(routes: [
-    GoRoute(
-        path: '/',
-        redirect: (_) {
-          final puzzleSeed = getIt.get<PuzzleSeedCubit>()..randomSeed();
-          return '/${puzzleSeed.state.seed}';
-        }),
-    GoRoute(
-        path: '/:seed',
-        pageBuilder: (context, state) {
-          final seed = state.params['seed'] ?? '';
-          const name = '15 Puzzle';
-          getIt.get<ThemeCubit>().changeTheme(seed);
-          getIt.get<PuzzleSeedCubit>().fromSeed(seed);
+  final router = GoRouter(
+      errorBuilder: (context, state) {
+        appSetSwitcherDescription(name: '15 Puzzle 404');
 
-          appSetSwitcherDescription(name: name);
+        return const UnknownScreen();
+      },
+      routes: [
+        GoRoute(
+            path: '/',
+            redirect: (_) {
+              final puzzleSeed = getIt.get<PuzzleSeedCubit>()..randomSeed();
+              return '/${puzzleSeed.state.seed}';
+            }),
+        GoRoute(
+            path: '/:seed',
+            builder: (_, state) {
+              final seed = state.params['seed'] ?? '';
+              const name = '15 Puzzle';
+              getIt.get<ThemeCubit>().changeTheme(seed);
+              getIt.get<PuzzleSeedCubit>().fromSeed(seed);
 
-          return CustomTransitionPage<void>(
-            transitionsBuilder: (context, anim1, anim2, child) => child,
-            name: name,
-            child: PuzzleScreen(seed: seed),
-          );
-        })
-  ]);
+              appSetSwitcherDescription(name: name);
+              return PuzzleScreen(seed: seed);
+            })
+      ]);
 }

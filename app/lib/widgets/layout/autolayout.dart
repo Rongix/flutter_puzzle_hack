@@ -8,19 +8,15 @@ typedef AutolayoutBuilder = Widget Function(BoxConstraints constraints, Breakpoi
 /// Match screen size to proper layout builder.
 class UniversalAutoLayout extends StatelessWidget {
   const UniversalAutoLayout({
-    required this.onMobilePortrait,
-    required this.onMobileLandscape,
-    required this.onTabletPortrait,
-    required this.onTabletLandscape,
-    required this.onDesktop,
+    required this.onSmall,
+    required this.onMedium,
+    required this.onLarge,
     Key? key,
   }) : super(key: key);
 
-  final AutolayoutBuilder onMobilePortrait;
-  final AutolayoutBuilder onMobileLandscape;
-  final AutolayoutBuilder onTabletPortrait;
-  final AutolayoutBuilder onTabletLandscape;
-  final AutolayoutBuilder onDesktop;
+  final AutolayoutBuilder onSmall;
+  final AutolayoutBuilder onMedium;
+  final AutolayoutBuilder onLarge;
 
   @override
   Widget build(BuildContext context) {
@@ -30,11 +26,9 @@ class UniversalAutoLayout extends StatelessWidget {
       Widget callBuilder(AutolayoutBuilder fun) => fun.call(constraints, breakpoint);
 
       return breakpoint.match(
-        onMobilePortrait: callBuilder(onMobilePortrait),
-        onMobileLandscape: callBuilder(onMobileLandscape),
-        onTabletPortrait: callBuilder(onTabletPortrait),
-        onTabletLandscape: callBuilder(onTabletLandscape),
-        onDesktop: callBuilder(onDesktop),
+        onMobilePortrait: callBuilder(onSmall),
+        onTabletPortrait: callBuilder(onMedium),
+        onDesktop: callBuilder(onLarge),
       );
     });
   }
