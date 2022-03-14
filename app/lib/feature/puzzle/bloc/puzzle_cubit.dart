@@ -6,8 +6,7 @@ enum SwipeDirection { up, down, left, right, none }
 enum PuzzleCompletion { incomplete, complete, unsolvable }
 
 class PuzzleCubit extends Cubit<PuzzleCubitState> {
-  PuzzleCubit(List<int> puzzle)
-      : super(PuzzleCubitState.init([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 15]));
+  PuzzleCubit(List<int> puzzle) : super(PuzzleCubitState.init(puzzle));
 
   int get blankIndex => state.puzzle.indexOf(16);
 

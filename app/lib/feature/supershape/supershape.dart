@@ -6,8 +6,6 @@ import 'package:flutter/animation.dart';
 import 'package:flutter/painting.dart';
 import 'package:vector_math/vector_math.dart' as vector;
 
-typedef DoubleBuilder = double Function(double value);
-
 class Supershape {
   const Supershape(this.points, this.angleOffset, this.config);
 

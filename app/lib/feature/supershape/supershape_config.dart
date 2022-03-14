@@ -1,6 +1,6 @@
 import 'dart:math' as math;
 
-import 'package:app/feature/supershape/supershape.dart';
+typedef DoubleBuilder = double Function(double value);
 
 double _doubleBuilderDefault(double val) => 1;
 
