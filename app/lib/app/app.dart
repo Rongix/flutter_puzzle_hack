@@ -51,19 +51,16 @@ class _AppState extends State<App> {
         path: '/:seed',
         pageBuilder: (context, state) {
           final seed = state.params['seed'] ?? '';
-          final isHackMode = computeIsHackMode(state.queryParams);
-          final name = '${computeAppName(isHackMode: isHackMode)}: $seed';
+          const name = '15 Puzzle';
           getIt.get<ThemeCubit>().changeTheme(seed);
+          getIt.get<PuzzleSeedCubit>().fromSeed(seed);
 
           appSetSwitcherDescription(name: name);
 
           return CustomTransitionPage<void>(
             transitionsBuilder: (context, anim1, anim2, child) => child,
             name: name,
-            child: PuzzleScreen(
-              seed: seed,
-              isHackMode: isHackMode,
-            ),
+            child: PuzzleScreen(seed: seed),
           );
         })
   ]);
