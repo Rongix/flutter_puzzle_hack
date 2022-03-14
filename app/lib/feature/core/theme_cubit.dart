@@ -46,6 +46,7 @@ class ThemeSingletonState extends Equatable {
         headline5: headline5(Color(palette.neutral.get(30))),
         subtitle1: subtitle1(Color(palette.tertiary.get(40))),
         bodyText2: bodyText2(Color(palette.neutral.get(40))),
+        button: button(),
       ),
       primaryTextTheme: TextTheme(
         headline6: headline6Primary(Color(palette.primary.get(99))),
@@ -73,6 +74,7 @@ class ThemeSingletonState extends Equatable {
         headline5: headline5(Color(palette.neutral.get(97))),
         subtitle1: subtitle1(Color(palette.tertiary.get(90))),
         bodyText2: bodyText2(Color(palette.neutral.get(90))),
+        button: button(),
       ),
       primaryTextTheme: TextTheme(
         headline6: headline6Primary(Color(palette.neutralVariant.get(97))),
@@ -92,7 +94,7 @@ class ThemeSingletonState extends Equatable {
   static TextStyle bodyText2(Color color) =>
       TextStyle(color: color, fontSize: 16, letterSpacing: 1.5, fontWeight: FontWeight.w600);
 
-  static TextStyle button(Color color) => TextStyle(color: color, height: 1.2, fontSize: 14);
+  static TextStyle button() => const TextStyle(height: 1.3, fontSize: 14);
 
   /// Primary text styles
 
@@ -109,7 +111,7 @@ class ThemeSingletonState extends Equatable {
     return OutlinedButtonThemeData(
       style: ButtonStyle(
         padding: MaterialStateProperty.resolveWith(
-            (states) => const EdgeInsets.symmetric(vertical: 14, horizontal: 24)),
+            (states) => const EdgeInsets.symmetric(vertical: 12, horizontal: 24)),
         shape: MaterialStateProperty.resolveWith(
             (states) => RoundedRectangleBorder(borderRadius: BorderRadius.circular(32))),
         overlayColor: MaterialStateProperty.resolveWith((states) => overlay),

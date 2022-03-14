@@ -44,69 +44,83 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
       body: Stack(
         children: [
           const PuzzleBackground(),
-          Center(
-            child: LayoutBuilder(
-              builder: (_, cstr) {
-                final double windowSize = min(cstr.maxHeight, cstr.maxWidth);
-                final double maxPuzzleSize = min(400, windowSize);
+          LayoutBuilder(
+            builder: (_, cstr) {
+              final double maxPuzzleSize = min(400, cstr.maxWidth);
 
-                return SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 12),
-                      Text('Puzzle Challenge', style: Theme.of(context).textTheme.headline5),
-                      BlocSelector<PuzzleCubit, PuzzleCubitState, bool>(
-                        bloc: cubit,
-                        selector: (state) => state.isCompleted,
-                        builder: (context, isCompleted) =>
-                            BlocSelector<PuzzleSeedCubit, PuzzleSeedState, String>(
-                          bloc: getIt.get<PuzzleSeedCubit>(),
-                          selector: (state) => state.supershape.config.name,
-                          builder: (_, name) => Text(isCompleted ? '$name' : 'Naturally wild puzzle',
-                              key: ValueKey(name), style: Theme.of(context).textTheme.subtitle1),
+              return ListView(
+                children: [
+                  Container(
+                    constraints: BoxConstraints(minHeight: cstr.maxHeight),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const SizedBox(height: 32),
+                        Text(
+                          'Puzzle Challenge',
+                          style: Theme.of(context).textTheme.headline5,
+                          textAlign: TextAlign.center,
                         ),
-                      ),
-                      const SizedBox(height: 16),
-                      BlocSelector<PuzzleCubit, PuzzleCubitState, int>(
-                        selector: (state) => state.moves,
-                        bloc: cubit,
-                        builder: (_, moves) =>
-                            Text('$moves/∞ moves', style: Theme.of(context).textTheme.bodyText2),
-                      ),
-                      const SizedBox(height: 40),
-                      Center(
-                        child: PuzzleViewer(
-                          puzzleCubit: cubit,
-                          size: maxPuzzleSize,
-                        ),
-                      ),
-                      const SizedBox(height: 48),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          FxOnActionScale(
-                            child: OutlinedButton.icon(
-                              icon: const Icon(MdiIcons.seed),
-                              label: const Text('Random Seed'),
-                              onPressed: () => GoRouter.of(context).go('/'),
+                        BlocSelector<PuzzleCubit, PuzzleCubitState, bool>(
+                          bloc: cubit,
+                          selector: (state) => state.isCompleted,
+                          builder: (context, isCompleted) =>
+                              BlocSelector<PuzzleSeedCubit, PuzzleSeedState, String>(
+                            bloc: getIt.get<PuzzleSeedCubit>(),
+                            selector: (state) => state.supershape.config.name,
+                            builder: (_, name) => Text(
+                              isCompleted ? name : 'Naturally wild puzzle',
+                              key: ValueKey(name),
+                              style: Theme.of(context).textTheme.subtitle1,
+                              textAlign: TextAlign.center,
                             ),
                           ),
-                          const SizedBox(width: 16),
-                          FxOnActionScale(
-                            child: OutlinedButton.icon(
-                              icon: const Icon(MdiIcons.beeFlower),
-                              label: const Text('Find Seed'),
-                              onPressed: () => GoRouter.of(context).go('/'),
-                            ),
+                        ),
+                        const SizedBox(height: 16),
+                        BlocSelector<PuzzleCubit, PuzzleCubitState, int>(
+                          selector: (state) => state.moves,
+                          bloc: cubit,
+                          builder: (_, moves) => Text(
+                            '$moves/∞ moves',
+                            style: Theme.of(context).textTheme.bodyText2,
+                            textAlign: TextAlign.center,
                           ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                    ],
-                  ),
-                );
-              },
-            ),
+                        ),
+                        const SizedBox(height: 32),
+                        Center(
+                          child: PuzzleViewer(
+                            puzzleCubit: cubit,
+                            size: maxPuzzleSize,
+                          ),
+                        ),
+                        const SizedBox(height: 40),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            FxOnActionScale(
+                              child: OutlinedButton.icon(
+                                icon: const Icon(MdiIcons.seed),
+                                label: const Text('Random Seed'),
+                                onPressed: () => GoRouter.of(context).go('/'),
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            FxOnActionScale(
+                              child: OutlinedButton.icon(
+                                icon: const Icon(MdiIcons.beeFlower),
+                                label: const Text('Find Seed'),
+                                onPressed: () => GoRouter.of(context).go('/'),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 32),
+                      ],
+                    ),
+                  )
+                ],
+              );
+            },
           ),
         ],
       ),
