@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:animations/animations.dart';
 import 'package:app/app/injection.dart';
 import 'package:app/extensions/iterable_extensions.dart';
 import 'package:app/feature/core/puzzle_seed_cubit.dart';
@@ -73,18 +74,24 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
                             bloc: cubit,
                             selector: (state) => state.isCompleted,
                             builder: (context, isCompleted) =>
-                              BlocSelector<ThemeCubit, ThemeSingletonState, String>(
-                                bloc: getIt.get<ThemeCubit>(),
-                                selector: (state) => state.name,
-                                builder: (context, colorName) =>
+                                BlocSelector<ThemeCubit, ThemeSingletonState, String>(
+                              bloc: getIt.get<ThemeCubit>(),
+                              selector: (state) => state.name,
+                              builder: (context, colorName) =>
                                   BlocSelector<PuzzleSeedCubit, PuzzleSeedState, String>(
                                 bloc: getIt.get<PuzzleSeedCubit>(),
                                 selector: (state) => state.supershape.config.name,
-                                builder: (_, name) => Text(
-                                  isCompleted ? '$colorName $name' : 'Naturally wild puzzle',
-                                  key: ValueKey(name),
-                                  style: Theme.of(context).textTheme.subtitle1,
-                                  textAlign: TextAlign.center,
+                                builder: (_, name) => AnimatedSwitcher(
+                                  duration: const Duration(milliseconds: 300),
+                                  transitionBuilder: (child, animation) {
+                                    return FadeScaleTransition(animation: animation, child: child);
+                                  },
+                                  child: Text(
+                                    isCompleted ? '$colorName $name' : 'Naturally wild puzzle',
+                                    key: ValueKey(isCompleted),
+                                    style: Theme.of(context).textTheme.subtitle1,
+                                    textAlign: TextAlign.center,
+                                  ),
                                 ),
                               ),
                             ),
@@ -221,6 +228,7 @@ class _PuzzleViewerState extends State<PuzzleViewer> {
             clipBehavior: Clip.none,
             children: [
               ...state.puzzle.mapIndexed((e, i) {
+                print(e);
                 if (e == 16) return const SizedBox();
                 return AnimatedPositioned(
                   key: ValueKey('PuzzleTile-$e'),
@@ -241,7 +249,17 @@ class _PuzzleViewerState extends State<PuzzleViewer> {
                         builder: (_, supershape) => PuzzleTile(
                           backgroundShape: backgroundShape(supershape),
                           size: tileSize,
-                          value: state.isCompleted ? '^__^' : e.toString(),
+                          child: AnimatedSwitcher(
+                            transitionBuilder: (child, animation) {
+                              return FadeScaleTransition(animation: animation, child: child);
+                            },
+                            duration: const Duration(milliseconds: 300),
+                            child: Text(
+                              state.isCompleted ? '>_<' : e.toString(),
+                              key: ValueKey(state.isCompleted),
+                              style: Theme.of(context).primaryTextTheme.headline6,
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -268,14 +286,14 @@ class _PuzzleViewerState extends State<PuzzleViewer> {
 class PuzzleTile extends StatelessWidget {
   const PuzzleTile({
     required this.size,
-    required this.value,
+    required this.child,
     required this.backgroundShape,
     Key? key,
   }) : super(key: key);
 
   /// max height and width of a puzzle tile
   final double size;
-  final String value;
+  final Widget child;
   final Widget backgroundShape;
 
   @override
@@ -292,7 +310,7 @@ class PuzzleTile extends StatelessWidget {
               width: size,
               alignment: Alignment.center,
               constraints: const BoxConstraints.expand(),
-              child: Text(value, style: Theme.of(context).primaryTextTheme.headline6),
+              child: child,
             ),
           ],
         ),

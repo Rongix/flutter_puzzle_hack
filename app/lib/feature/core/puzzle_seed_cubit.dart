@@ -21,7 +21,7 @@ class PuzzleSeedCubit extends Cubit<PuzzleSeedState> {
   final SixteenPuzzleGenerator generator;
 
   static const String solvedSeed = 'ABCDEFGHIJKLMNOP';
-  static List<int> get solvedPuzzle => List<int>.generate(17, (i) => i + 1);
+  static List<int> get solvedPuzzle => List<int>.generate(16, (i) => i + 1);
 
   static PuzzleSeedState get solvedState => PuzzleSeedState(
         seed: solvedSeed,
