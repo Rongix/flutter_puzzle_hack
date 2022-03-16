@@ -37,5 +37,20 @@ void main() {
       for (final puzzle in TestData.unsolvablePuzzles) expect(generator.validate(puzzle), false);
       for (final puzzle in TestData.solvablePuzzles) expect(generator.validate(puzzle), true);
     });
+
+    group('validation logic', () {
+      test('counting inversions', () {
+        final puzzles = {
+          1: <int>[2, 1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
+          10: <int>[1, 8, 2, 9, 4, 3, 7, 6, 5],
+          41: <int>[13, 2, 10, 3, 1, 12, 8, 4, 5, 16, 9, 6, 15, 14, 11, 7],
+          62: <int>[6, 13, 7, 10, 8, 9, 11, 16, 15, 2, 12, 5, 14, 3, 1, 4],
+          56: <int>[3, 9, 1, 15, 14, 11, 4, 6, 13, 16, 10, 12, 2, 7, 8, 5]
+        };
+        
+        for(final puzzle in puzzles.entries)
+          expect(generator.countInversions(puzzle.value), puzzle.key);
+      });
+    });
   });
 }
