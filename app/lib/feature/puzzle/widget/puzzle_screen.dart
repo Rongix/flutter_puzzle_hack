@@ -15,7 +15,6 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import '../../../widgets/fx/fx_on_action_scale.dart';
 import '../../supershape/animated_supershape.dart';
 import '../bloc/intents.dart';
-import 'puzzle_background.dart';
 
 class PuzzleScreen extends StatefulWidget {
   const PuzzleScreen({
@@ -73,23 +72,28 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
                           BlocSelector<PuzzleCubit, PuzzleCubitState, bool>(
                             bloc: cubit,
                             selector: (state) => state.isCompleted,
-                            builder: (context, isCompleted) =>
-                                BlocSelector<ThemeCubit, ThemeSingletonState, String>(
+                            builder: (context, isCompleted) => BlocSelector<
+                                ThemeCubit, ThemeSingletonState, String>(
                               bloc: getIt.get<ThemeCubit>(),
                               selector: (state) => state.name,
-                              builder: (context, colorName) =>
-                                  BlocSelector<PuzzleSeedCubit, PuzzleSeedState, String>(
+                              builder: (context, colorName) => BlocSelector<
+                                  PuzzleSeedCubit, PuzzleSeedState, String>(
                                 bloc: getIt.get<PuzzleSeedCubit>(),
-                                selector: (state) => state.supershape.config.name,
+                                selector: (state) =>
+                                    state.supershape.config.name,
                                 builder: (_, name) => AnimatedSwitcher(
                                   duration: const Duration(milliseconds: 300),
                                   transitionBuilder: (child, animation) {
-                                    return FadeScaleTransition(animation: animation, child: child);
+                                    return FadeScaleTransition(
+                                        animation: animation, child: child);
                                   },
                                   child: Text(
-                                    isCompleted ? '$colorName $name' : 'Naturally wild puzzle',
+                                    isCompleted
+                                        ? '$colorName $name'
+                                        : 'Naturally wild puzzle',
                                     key: ValueKey(isCompleted),
-                                    style: Theme.of(context).textTheme.subtitle1,
+                                    style:
+                                        Theme.of(context).textTheme.subtitle1,
                                     textAlign: TextAlign.center,
                                   ),
                                 ),
@@ -121,7 +125,8 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
                                 child: OutlinedButton.icon(
                                   icon: const Icon(MdiIcons.seed),
                                   label: const Text('Random Seed'),
-                                  onPressed: () => GoRouter.of(context).go('/r/puzzle'),
+                                  onPressed: () =>
+                                      GoRouter.of(context).go('/r/puzzle'),
                                 ),
                               ),
                               const SizedBox(width: 16),
@@ -198,28 +203,36 @@ class _PuzzleViewerState extends State<PuzzleViewer> {
         },
         actions: {
           MoveRightIntent: CallbackAction(
-            onInvoke: (_) => widget.puzzleCubit.moveInDirection(SwipeDirection.right, false),
+            onInvoke: (_) =>
+                widget.puzzleCubit.moveInDirection(SwipeDirection.right, false),
           ),
           MoveLeftIntent: CallbackAction(
-            onInvoke: (_) => widget.puzzleCubit.moveInDirection(SwipeDirection.left, false),
+            onInvoke: (_) =>
+                widget.puzzleCubit.moveInDirection(SwipeDirection.left, false),
           ),
           MoveUpIntent: CallbackAction(
-            onInvoke: (_) => widget.puzzleCubit.moveInDirection(SwipeDirection.up, false),
+            onInvoke: (_) =>
+                widget.puzzleCubit.moveInDirection(SwipeDirection.up, false),
           ),
           MoveDownIntent: CallbackAction(
-            onInvoke: (_) => widget.puzzleCubit.moveInDirection(SwipeDirection.down, false),
+            onInvoke: (_) =>
+                widget.puzzleCubit.moveInDirection(SwipeDirection.down, false),
           ),
           SwipeRightIntent: CallbackAction(
-            onInvoke: (_) => widget.puzzleCubit.moveInDirection(SwipeDirection.right, true),
+            onInvoke: (_) =>
+                widget.puzzleCubit.moveInDirection(SwipeDirection.right, true),
           ),
           SwipeLeftIntent: CallbackAction(
-            onInvoke: (_) => widget.puzzleCubit.moveInDirection(SwipeDirection.left, true),
+            onInvoke: (_) =>
+                widget.puzzleCubit.moveInDirection(SwipeDirection.left, true),
           ),
           SwipeUpIntent: CallbackAction(
-            onInvoke: (_) => widget.puzzleCubit.moveInDirection(SwipeDirection.up, true),
+            onInvoke: (_) =>
+                widget.puzzleCubit.moveInDirection(SwipeDirection.up, true),
           ),
           SwipeDownIntent: CallbackAction(
-            onInvoke: (_) => widget.puzzleCubit.moveInDirection(SwipeDirection.down, true),
+            onInvoke: (_) =>
+                widget.puzzleCubit.moveInDirection(SwipeDirection.down, true),
           ),
         },
         child: BlocBuilder<PuzzleCubit, PuzzleCubitState>(
@@ -228,14 +241,15 @@ class _PuzzleViewerState extends State<PuzzleViewer> {
             clipBehavior: Clip.none,
             children: [
               ...state.puzzle.mapIndexed((e, i) {
-                print(e);
                 if (e == 16) return const SizedBox();
                 return AnimatedPositioned(
                   key: ValueKey('PuzzleTile-$e'),
                   duration: state.isFreshPuzzle
                       ? const Duration(milliseconds: 450)
                       : const Duration(milliseconds: 250),
-                  curve: state.isFreshPuzzle ? Curves.easeInOut : Curves.easeInQuad,
+                  curve: state.isFreshPuzzle
+                      ? Curves.easeInOut
+                      : Curves.easeInQuad,
                   left: i % 4 * tileSize,
                   top: i ~/ 4 * tileSize,
                   child: RepaintBoundary(
@@ -243,7 +257,8 @@ class _PuzzleViewerState extends State<PuzzleViewer> {
                       onTap: () => widget.puzzleCubit.tap(i),
                       onHoverScale: 0.9,
                       onMouseDown: 0.85,
-                      child: BlocSelector<PuzzleSeedCubit, PuzzleSeedState, Supershape>(
+                      child: BlocSelector<PuzzleSeedCubit, PuzzleSeedState,
+                          Supershape>(
                         bloc: _puzzleSeedCubit,
                         selector: (state) => state.supershape,
                         builder: (_, supershape) => PuzzleTile(
@@ -251,13 +266,15 @@ class _PuzzleViewerState extends State<PuzzleViewer> {
                           size: tileSize,
                           child: AnimatedSwitcher(
                             transitionBuilder: (child, animation) {
-                              return FadeScaleTransition(animation: animation, child: child);
+                              return FadeScaleTransition(
+                                  animation: animation, child: child);
                             },
                             duration: const Duration(milliseconds: 300),
                             child: Text(
                               state.isCompleted ? '>_<' : e.toString(),
                               key: ValueKey(state.isCompleted),
-                              style: Theme.of(context).primaryTextTheme.headline6,
+                              style:
+                                  Theme.of(context).primaryTextTheme.headline6,
                             ),
                           ),
                         ),

@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:app/feature/puzzle/widget/puzzle_background.dart';
 import 'package:app/feature/supershape/supershape_painter.dart';
 import 'package:app/widgets/fx/fx_on_action_scale.dart';
 import 'package:app/widgets/layout/autolayout.dart';
@@ -76,7 +75,8 @@ class HomeScreenPlayButton extends StatelessWidget {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(100),
                   side: BorderSide(
-                    color: Theme.of(context).colorScheme.primary.withOpacity(0.4),
+                    color:
+                        Theme.of(context).colorScheme.primary.withOpacity(0.4),
                     width: 2,
                   )),
             ),

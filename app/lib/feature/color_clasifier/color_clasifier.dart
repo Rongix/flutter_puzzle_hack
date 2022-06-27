@@ -1,12 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:vector_math/vector_math.dart' hide Colors;
 import 'dart:math';
 
-extension _HsvVectors on HSVColor {
-  Vector3 toVector3() {
-    return Vector3(sin(radians(hue)).toDouble() / 2 + 0.5, saturation, value);
-  }
-}
+import 'package:flutter/material.dart';
 
 class ColorDefinition {
   ColorDefinition({required this.name, required this.color})
@@ -28,9 +22,8 @@ class ColorDefinition {
     final y2 = color.saturation;
     final z2 = color.value;
 
-    var dh = ((x1 - x2)/360).abs();
-    if(dh > 0.5)
-      dh = 1.0 - dh;
+    var dh = ((x1 - x2) / 360).abs();
+    if (dh > 0.5) dh = 1.0 - dh;
 
     return sqrt(pow2(dh) + pow2(y1 - y2) + pow2(z1 - z2));
   }

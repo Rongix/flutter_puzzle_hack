@@ -1,7 +1,7 @@
 import 'package:app/app/injection.dart';
+import 'package:desktop_window/desktop_window.dart';
 import 'package:flutter/material.dart';
 import 'package:universal_platform/universal_platform.dart';
-import 'package:window_size/window_size.dart';
 
 import 'app/app.dart';
 
@@ -10,7 +10,7 @@ void main() {
   setupInjection();
   Paint.enableDithering = true;
   if (UniversalPlatform.isDesktop) {
-    setWindowMinSize(const Size(450, 450));
+    DesktopWindow.setMinWindowSize(const Size(450, 450));
   }
   runApp(const App());
 }

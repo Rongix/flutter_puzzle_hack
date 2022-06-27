@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -18,9 +16,15 @@ class UnknownScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Spacer(),
-                  Text('404', style: Theme.of(context).textTheme.headline5?.copyWith(fontSize: 60)),
-                  Text('This page does not exist', style: Theme.of(context).textTheme.headline5),
-                  Text('Go back or generate new random puzzle', style: Theme.of(context).textTheme.bodyText2),
+                  Text('404',
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline5
+                          ?.copyWith(fontSize: 60)),
+                  Text('This page does not exist',
+                      style: Theme.of(context).textTheme.headline5),
+                  Text('Go back or generate new random puzzle',
+                      style: Theme.of(context).textTheme.bodyText2),
                   const SizedBox(height: 32),
                   FxOnActionScale(
                     child: OutlinedButton.icon(

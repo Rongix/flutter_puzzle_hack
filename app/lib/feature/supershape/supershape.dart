@@ -1,3 +1,4 @@
+import 'dart:developer' as dev;
 import 'dart:math';
 
 import 'package:app/extensions/path_extensions.dart';
@@ -13,7 +14,7 @@ class Supershape {
     required String seed,
     double angularPrecission = 1.0,
   }) {
-    print('Supershape.fromSeed: $seed');
+    dev.log(seed, name: 'Game|Seed');
     final random = Random(seed.hashCode);
     final index = random.nextInt(SupershapeConfig.seeds.length);
     final config = SupershapeConfig.seeds[index];

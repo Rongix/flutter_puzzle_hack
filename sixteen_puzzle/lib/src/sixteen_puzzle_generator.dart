@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:meta/meta.dart';
 import 'puzzle_exception.dart';
 
@@ -37,15 +35,14 @@ class SixteenPuzzleGenerator {
     a) if the blank is on an even row counting from the bottom  -> number of inversions must be odd.
     b) if the blank is on an odd row counting from the bottom   -> number of inversions is even. */
     final isBlankRowEven = (list.indexOf(16) ~/ 4).isEven;
-    final inversions =
-        countInversions(List<int>.from(list, growable: false));
+    final inversions = countInversions(List<int>.from(list, growable: false));
     return isBlankRowEven ? inversions.isOdd : inversions.isEven;
   }
 
   @visibleForTesting
   int countInversions(List<int> list) {
     assert(list.isNotEmpty);
-    
+
     var inversions = 0;
     final blankNumber = list.length;
     final filteredList =
