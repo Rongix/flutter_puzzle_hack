@@ -1,14 +1,13 @@
 import 'dart:math';
 
+import 'package:app/feature/supershape/supershape.dart';
+import 'package:app/feature/supershape/supershape_config.dart';
 import 'package:app/feature/supershape/supershape_painter.dart';
 import 'package:app/widgets/fx/fx_on_action_scale.dart';
 import 'package:app/widgets/layout/autolayout.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-
-import '../supershape/supershape.dart';
-import '../supershape/supershape_config.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);

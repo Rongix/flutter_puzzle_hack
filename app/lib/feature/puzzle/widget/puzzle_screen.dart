@@ -5,16 +5,15 @@ import 'package:app/app/injection.dart';
 import 'package:app/extensions/iterable_extensions.dart';
 import 'package:app/feature/core/puzzle_seed_cubit.dart';
 import 'package:app/feature/core/theme_cubit.dart';
+import 'package:app/feature/puzzle/bloc/intents.dart';
 import 'package:app/feature/puzzle/bloc/puzzle_cubit.dart';
+import 'package:app/feature/supershape/animated_supershape.dart';
 import 'package:app/feature/supershape/supershape.dart';
+import 'package:app/widgets/fx/fx_on_action_scale.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-
-import '../../../widgets/fx/fx_on_action_scale.dart';
-import '../../supershape/animated_supershape.dart';
-import '../bloc/intents.dart';
 
 class PuzzleScreen extends StatefulWidget {
   const PuzzleScreen({
